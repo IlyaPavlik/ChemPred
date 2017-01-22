@@ -1,0 +1,22 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:c="urn:import:com.google.gwt.canvas.client">
+
+    <g:DockLayoutPanel unit="EM">
+        <g:north size="5">
+            <g:Label>Header</g:Label>
+        </g:north>
+        <g:east size="5">
+            <g:Label>Left navigation</g:Label>
+        </g:east>
+        <g:center>
+            <c:Canvas ui:field="canvas"></c:Canvas>
+        </g:center>
+        <g:west size="5">
+            <g:Label>Right navigation</g:Label>
+        </g:west>
+        <g:south size="5">
+            <g:Label>Footer</g:Label>
+        </g:south>
+    </g:DockLayoutPanel>
+</ui:UiBinder>

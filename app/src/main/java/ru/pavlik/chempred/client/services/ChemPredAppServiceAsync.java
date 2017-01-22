@@ -1,4 +1,4 @@
-package client;
+package ru.pavlik.chempred.client.services;
 
 public interface ChemPredAppServiceAsync {
 
