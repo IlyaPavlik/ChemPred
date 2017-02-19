@@ -40,6 +40,19 @@
             <version>${gwtp.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.gwtd3</groupId>
+            <artifactId>gwt-d3-api</artifactId>
+            <version>1.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.gwtd3</groupId>
+            <artifactId>gwt-d3-api</artifactId>
+            <version>1.3.0</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

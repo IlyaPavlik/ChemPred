@@ -9,6 +9,8 @@
 
     <!--<inherits name='com.google.gwt.user.User'/>-->
     <inherits name="com.gwtplatform.mvp.MvpWithEntryPoint"/>
+    <inherits name="com.google.gwt.logging.Logging"/>
+    <inherits name='com.github.gwtd3.D3'/>
 
 
     <!-- Inherit the default GWT style sheet.  You can change       -->
