@@ -9,10 +9,18 @@
         <servlet-name>ChemPredServlet</servlet-name>
         <servlet-class>ru.pavlik.chempred.server.ChemPredServiceImp</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ElementService</servlet-name>
+        <servlet-class>ru.pavlik.chempred.server.services.ElementServiceImpl</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ChemPredServlet</servlet-name>
-        <url-pattern>/chemPred/chemPredService</url-pattern>
+        <url-pattern>/ChemPred/message</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ElementService</servlet-name>
+        <url-pattern>/ChemPred/element</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serves -->

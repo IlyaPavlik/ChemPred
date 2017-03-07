@@ -12,9 +12,13 @@ import com.github.gwtd3.api.scales.PowScale;
 import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import ru.pavlik.chempred.client.model.CustomNode;
+import ru.pavlik.chempred.client.model.LinkType;
+import ru.pavlik.chempred.client.model.js.ElementLink;
+import ru.pavlik.chempred.client.model.js.ElementNode;
 
 public class DrawPanelWidget extends FlowPanel implements IsWidget {
+
+    private static final int ELEMENT_RADIUS = 10;
 
     private int width;
     private int height;
@@ -26,16 +30,27 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private Force force;
     private Zoom zoom;
 
-    private CustomNode mousdownNode;
-    private CustomNode mousupNode;
-    private CustomNode selectedNode;
+    private ElementNode mousdownNode;
+    private ElementNode mousupNode;
+    private ElementNode selectedNode;
     private Force.Link mousdownLink;
     private Force.Link selectedLink;
 
     private OrdinalScale color;
     private PowScale radius;
+    private ElementNode currentElement = null;
+    private LinkType linkType = LinkType.SINGLE;
 
     public DrawPanelWidget() {
+    }
+
+    public void setCurrentElement(ElementNode currentElement) {
+        this.currentElement = currentElement;
+        this.currentElement.setSize(ELEMENT_RADIUS);
+    }
+
+    public void setLinkType(LinkType linkType) {
+        this.linkType = linkType;
     }
 
     public void init(int width, int height) {
@@ -45,7 +60,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
         init();
     }
 
-    Array<CustomNode> nodes = Array.create();
+    Array<ElementNode> nodes = Array.create();
     Array<Force.Link> links = Array.create();
 
     private void init() {
@@ -77,9 +92,8 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
         force = D3.layout().force()
                 .size(width, height)
-                .nodes(Array.fromObjects(CustomNode.create("C", 10)))
-                .linkDistance(50)
-                .charge(-200);
+                .linkDistance(80)
+                .charge(-400);
         force.on(Force.ForceEventType.TICK, tick());
 
         nodes = force.nodes();
@@ -98,6 +112,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private DatumFunction<Void> tick() {
         return (context, d, index) -> {
             vis.selectAll(".link")
+                    .selectAll("line")
                     .attr("x1", (context1, d1, index1) -> {
                         return d1.<Force.Link>as().source().x();
                     })
@@ -113,7 +128,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
             vis.selectAll(".node")
                     .attr("transform", (context1, d1, index1) -> {
-                        CustomNode node = d1.<CustomNode>as();
+                        ElementNode node = d1.<ElementNode>as();
                         return "translate(" + node.x() + "," + node.y() + ")";
                     });
             return null;
@@ -140,9 +155,9 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     }
 
     private void redraw() {
-        vis.selectAll(".link")
+        Selection linkSelection = vis.selectAll(".link")
                 .data(links).enter()
-                .insert("line", ".node")
+                .insert("g", ".node")
                 .attr("class", "link")
                 .on(BrowserEvents.MOUSEDOWN, (context, d, index) -> {
                     mousdownLink = d.<Force.Link>as();
@@ -155,6 +170,8 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                     return null;
                 });
 
+        linkSelection.append("line");
+
         Selection nodeSelection = vis.selectAll(".node")
                 .data(nodes).enter()
                 .append("g")
@@ -162,7 +179,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 .on(BrowserEvents.MOUSEDOWN, (context, d, index) -> {
                             zoomSelection.on(".zoom", null); //remove zoom
 
-                            mousdownNode = d.<CustomNode>as();
+                            mousdownNode = d.<ElementNode>as();
                             if (mousdownNode == selectedNode) {
                                 selectedNode = null;
                             } else {
@@ -182,16 +199,16 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 )
                 .on(BrowserEvents.MOUSEUP, (context, d, index) -> {
                     if (mousdownNode != null) {
-                        mousupNode = d.<CustomNode>as();
+                        mousupNode = d.<ElementNode>as();
                         if (mousupNode == mousdownNode) {
                             resetMouseVars();
                             return null;
                         }
 
-                        Force.Link link1 = Force.Link.create(mousdownNode, mousupNode);
-                        links.push(link1);
+                        ElementLink elementLink = ElementLink.create(mousdownNode, mousupNode, linkType);
+                        links.push(elementLink);
 
-                        selectedLink = link1;
+                        selectedLink = elementLink;
                         selectedNode = null;
                         zoomSelection.call(zoom);
                         redraw();
@@ -201,11 +218,11 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
         nodeSelection.append("circle")
                 .attr("r", (context, d, index) -> {
-                    CustomNode node = d.<CustomNode>as();
+                    ElementNode node = d.<ElementNode>as();
                     return radius.apply(node.getSize()).asDouble();
                 })
                 .attr("fill", (context, d, index) -> {
-                    CustomNode node = d.<CustomNode>as();
+                    ElementNode node = d.<ElementNode>as();
                     return color.apply(node.getAtom()).asString();
                 });
 
@@ -213,7 +230,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .text((context, d, index) -> {
-                    CustomNode node = d.<CustomNode>as();
+                    ElementNode node = d.<ElementNode>as();
                     return node.getAtom();
                 });
 
@@ -260,7 +277,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
                 if (mousupNode == null) {
                     Coords coords = D3.mouseAsCoords(context);
-                    CustomNode newNode = CustomNode.create("C", 10, coords.x(), coords.y());
+                    ElementNode newNode = ElementNode.create(currentElement.getAtom(), ELEMENT_RADIUS, coords.x(), coords.y());
 
                     nodes.push(newNode);
                     selectedNode = newNode;
@@ -268,7 +285,11 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
                     links.push(Force.Link.create(mousdownNode, newNode));
                 }
-
+                redraw();
+            } else if (nodes.length() == 0) {
+                Coords coords = D3.mouseAsCoords(context);
+                currentElement.setLocation(coords.x(), coords.y());
+                nodes.push(currentElement);
                 redraw();
             }
             // clear mouse event vars

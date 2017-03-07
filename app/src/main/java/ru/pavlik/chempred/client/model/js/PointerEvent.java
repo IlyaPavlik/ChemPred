@@ -1,4 +1,4 @@
-package ru.pavlik.chempred.client.model;
+package ru.pavlik.chempred.client.model.js;
 
 import com.google.gwt.core.client.JavaScriptObject;
 

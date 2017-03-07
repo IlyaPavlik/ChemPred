@@ -5,31 +5,33 @@
 
     <ui:style src="home-view.css"/>
 
+    <ui:import field='ru.pavlik.chempred.client.application.home.HomeConstants.*'/>
+
     <g:DockLayoutPanel unit="EM">
         <g:north size="5">
             <g:Label>Header</g:Label>
         </g:north>
         <g:west size="6">
-            <b:VerticalButtonGroup id="menu_left" addStyleNames="{style.menu-left}">
-                <b:Button id="el_c" active="true">C</b:Button>
-                <b:Button id="el_o">O</b:Button>
-                <b:Button id="el_p">P</b:Button>
-                <b:Button id="el_s">S</b:Button>
-                <b:Button id="el_n">N</b:Button>
-                <b:Button id="el_cl">Cl</b:Button>
-                <b:Button id="el_table">Table</b:Button>
+            <b:VerticalButtonGroup ui:field="menuLeft" addStyleNames="{style.menu-left}" dataToggle="BUTTONS">
+                <b:RadioButton name="elementGroup" text="C" ui:field="elementC"/>
+                <b:RadioButton name="elementGroup" text="O" ui:field="elementO"/>
+                <b:RadioButton name="elementGroup" text="P" ui:field="elementP"/>
+                <b:RadioButton name="elementGroup" text="S" ui:field="elementS"/>
+                <b:RadioButton name="elementGroup" text="N" ui:field="elementN"/>
+                <b:RadioButton name="elementGroup" text="Cl" ui:field="elementCl"/>
+                <b:RadioButton name="elementGroup" text="Table" ui:field="periodicTable"/>
             </b:VerticalButtonGroup>
         </g:west>
         <g:center>
             <c:DrawPanelWidget ui:field="panel" addStyleNames="{style.main-canvas}"/>
         </g:center>
         <g:east size="6">
-            <b:VerticalButtonGroup id="menu_right" addStyleNames="{style.menu-right}">
-                <b:Button id="line" active="true">Line</b:Button>
-                <b:Button id="line_2">Line-2</b:Button>
-                <b:Button id="line_3">Line-3</b:Button>
-                <b:Button id="top_line">Top-Line</b:Button>
-                <b:Button id="bottom_line">Bottom-Line</b:Button>
+            <b:VerticalButtonGroup id="menu_right" addStyleNames="{style.menu-right}" dataToggle="BUTTONS">
+                <b:RadioButton name="linkGroup" ui:field="linkOne">Line</b:RadioButton>
+                <b:RadioButton name="linkGroup" ui:field="linkTwo">Line-2</b:RadioButton>
+                <b:RadioButton name="linkGroup" ui:field="linkThree">Line-3</b:RadioButton>
+                <b:RadioButton name="linkGroup" ui:field="linkTop">Top-Line</b:RadioButton>
+                <b:RadioButton name="linkGroup" ui:field="linkDown">Bottom-Line</b:RadioButton>
             </b:VerticalButtonGroup>
         </g:east>
         <g:south size="5">
