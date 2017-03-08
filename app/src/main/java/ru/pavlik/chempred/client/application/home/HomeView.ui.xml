@@ -27,7 +27,7 @@
         </g:center>
         <g:east size="6">
             <b:VerticalButtonGroup id="menu_right" addStyleNames="{style.menu-right}" dataToggle="BUTTONS">
-                <b:RadioButton name="linkGroup" ui:field="linkOne">Line</b:RadioButton>
+                <b:RadioButton name="linkGroup" ui:field="linkOne" active="true">Line</b:RadioButton>
                 <b:RadioButton name="linkGroup" ui:field="linkTwo">Line-2</b:RadioButton>
                 <b:RadioButton name="linkGroup" ui:field="linkThree">Line-3</b:RadioButton>
                 <b:RadioButton name="linkGroup" ui:field="linkTop">Top-Line</b:RadioButton>

@@ -25,6 +25,16 @@ public class ElementNode extends Force.Node<ElementNode> {
         }
     }-*/;
 
+    public static native ElementNode create(double x, double y, ElementNode element) /*-{
+        return {
+            x: x,
+            y: y,
+            atom: element.atom,
+            size: element.size,
+            valence: element.valence
+        }
+    }-*/;
+
     public static native ElementNode create(String atom, int size, double x, double y) /*-{
         return {
             atom: atom,

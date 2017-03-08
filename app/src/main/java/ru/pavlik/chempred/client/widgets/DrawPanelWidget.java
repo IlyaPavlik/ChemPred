@@ -170,7 +170,24 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                     return null;
                 });
 
-        linkSelection.append("line");
+        linkSelection.append("line")
+                .attr("stroke", (context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    switch (elementLink.getType()) {
+                        case SINGLE:
+                            return "green";
+                        case DOUBLE:
+                            return "blue";
+                        case TRIPLE:
+                            return "red";
+                        case TOP:
+                            return "yellow";
+                        case DOWN:
+                            return "orange";
+                        default:
+                            return "black";
+                    }
+                });
 
         Selection nodeSelection = vis.selectAll(".node")
                 .data(nodes).enter()
@@ -178,8 +195,13 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 .attr("class", "node")
                 .on(BrowserEvents.MOUSEDOWN, (context, d, index) -> {
                             zoomSelection.on(".zoom", null); //remove zoom
-
                             mousdownNode = d.<ElementNode>as();
+
+                            if (mousdownNode.getValence() - linkType.getWeight() < 0) {
+                                mousdownNode = null;
+                                return null;
+                            }
+
                             if (mousdownNode == selectedNode) {
                                 selectedNode = null;
                             } else {
@@ -225,13 +247,31 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                     ElementNode node = d.<ElementNode>as();
                     return color.apply(node.getAtom()).asString();
                 });
+        nodeSelection.append("text");
 
-        nodeSelection.append("text")
+        vis.selectAll(".node")
+                .selectAll("text")
+                .text("")
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
+                .append("tspan")
                 .text((context, d, index) -> {
                     ElementNode node = d.<ElementNode>as();
-                    return node.getAtom();
+                    String atom = node.getAtom();
+                    if (node.getValence() > 0) {
+                        atom += "H";
+                    }
+
+                    return atom;
+                })
+                .append("tspan")
+                .attr("baseline-shift", "sub")
+                .text((context, d, index) -> {
+                    ElementNode node = d.<ElementNode>as();
+                    if (node.getValence() > 1) {
+                        return String.valueOf(node.getValence());
+                    }
+                    return "";
                 });
 
         if (D3.event() != null) {
@@ -277,19 +317,21 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
                 if (mousupNode == null) {
                     Coords coords = D3.mouseAsCoords(context);
-                    ElementNode newNode = ElementNode.create(currentElement.getAtom(), ELEMENT_RADIUS, coords.x(), coords.y());
+                    ElementNode newNode = ElementNode.create(coords.x(), coords.y(), currentElement);
 
                     nodes.push(newNode);
                     selectedNode = newNode;
                     selectedLink = null;
 
-                    links.push(Force.Link.create(mousdownNode, newNode));
+                    mousdownNode.setValence(mousdownNode.getValence() - linkType.getWeight());
+                    newNode.setValence(newNode.getValence() - linkType.getWeight());
+
+                    links.push(ElementLink.create(mousdownNode, newNode, linkType));
                 }
                 redraw();
             } else if (nodes.length() == 0) {
                 Coords coords = D3.mouseAsCoords(context);
-                currentElement.setLocation(coords.x(), coords.y());
-                nodes.push(currentElement);
+                nodes.push(ElementNode.create(coords.x(), coords.y(), currentElement));
                 redraw();
             }
             // clear mouse event vars

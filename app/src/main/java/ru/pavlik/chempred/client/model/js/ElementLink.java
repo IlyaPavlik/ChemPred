@@ -8,12 +8,15 @@ public class ElementLink extends Force.Link<ElementLink> {
     protected ElementLink() {
     }
 
-    public static native ElementLink create(ElementNode source, ElementNode target, LinkType type) /*-{
+    public static native ElementLink create(ElementNode source, ElementNode target, LinkType linkType) /*-{
         return {
             source: source,
             target: target,
-            type: type
+            linkType: linkType
         }
     }-*/;
 
+    public final native LinkType getType() /*-{
+        return this.linkType;
+    }-*/;
 }
