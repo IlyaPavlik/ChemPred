@@ -17,8 +17,9 @@ body {
 }
 
 .node_selected {
-    stroke: #ff7f0e;
-    stroke-width: 1.5px;
+    stroke: #000;
+    stroke-width: 2px;
+    cursor: crosshair;
 }
 
 .drag_line {
