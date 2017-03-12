@@ -132,7 +132,6 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private DatumFunction<Void> tick() {
         return (context, d, index) -> {
             vis.selectAll(".link")
-                    .selectAll("line")
                     .attr("x1", (context1, d1, index1) -> {
                         return d1.<Force.Link>as().source().x();
                     })
@@ -177,19 +176,8 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private void redraw() {
         UpdateSelection linkDataSelection = vis.selectAll(".link").data(links);
         linkDataSelection.enter()
-                .insert("g", ".node")
+                .insert("line", ".node")
                 .attr("class", "link")
-                .on(BrowserEvents.MOUSEDOWN, (context, d, index) -> {
-                    mousdownLink = d.<Force.Link>as();
-                    if (mousdownLink == selectedLink) {
-                        selectedLink = null;
-                    } else {
-                        selectedLink = mousdownLink;
-                    }
-                    redraw();
-                    return null;
-                })
-                .append("line")
                 .attr("stroke", (context, d, index) -> {
                     ElementLink elementLink = d.<ElementLink>as();
                     switch (elementLink.getType()) {
@@ -364,14 +352,14 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     }
 
     private void spliceLinksForNodes(Force.Node elementNode) {
-        links
-                .filter((thisArg, element, index, array) -> {
-                    ElementLink elementLink = element.as();
-                    return elementLink.target() == elementNode || elementLink.source() == elementNode;
-                })
-                .map((ForEachCallback<Void>) (thisArg, element, index, array) -> {
-                    links.splice(links.indexOf(element), 1);
-                    return null;
-                });
+        Array toSplice = links.filter((thisArg, element, index, array) -> {
+            ElementLink elementLink = element.as();
+            return elementLink.target() == elementNode || elementLink.source() == elementNode;
+        });
+        toSplice.map((ForEachCallback<Void>) (thisArg, element, index, array) -> {
+            ElementLink elementLink = element.as();
+            links.splice(links.indexOf(elementLink), 1);
+            return null;
+        });
     }
 }
