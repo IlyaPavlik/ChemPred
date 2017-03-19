@@ -12,15 +12,18 @@
             <g:Label>Header</g:Label>
         </g:north>
         <g:west size="6">
-            <b:VerticalButtonGroup ui:field="menuLeft" addStyleNames="{style.menu-left}" dataToggle="BUTTONS">
-                <b:RadioButton name="elementGroup" text="C" ui:field="elementC"/>
-                <b:RadioButton name="elementGroup" text="O" ui:field="elementO"/>
-                <b:RadioButton name="elementGroup" text="P" ui:field="elementP"/>
-                <b:RadioButton name="elementGroup" text="S" ui:field="elementS"/>
-                <b:RadioButton name="elementGroup" text="N" ui:field="elementN"/>
-                <b:RadioButton name="elementGroup" text="Cl" ui:field="elementCl"/>
-                <b:RadioButton name="elementGroup" text="Table" ui:field="periodicTable"/>
-            </b:VerticalButtonGroup>
+            <g:FlowPanel>
+                <b:VerticalButtonGroup ui:field="menuLeft" addStyleNames="{style.menu-left}" dataToggle="BUTTONS">
+                    <b:RadioButton name="elementGroup" text="C" ui:field="elementC"/>
+                    <b:RadioButton name="elementGroup" text="O" ui:field="elementO"/>
+                    <b:RadioButton name="elementGroup" text="P" ui:field="elementP"/>
+                    <b:RadioButton name="elementGroup" text="S" ui:field="elementS"/>
+                    <b:RadioButton name="elementGroup" text="N" ui:field="elementN"/>
+                    <b:RadioButton name="elementGroup" text="Cl" ui:field="elementCl"/>
+                    <b:RadioButton name="elementGroup" text="Table" ui:field="periodicTable"/>
+                </b:VerticalButtonGroup>
+                <b:Button text="Clear" ui:field="clear" type="DEFAULT"/>
+            </g:FlowPanel>
         </g:west>
         <g:center>
             <c:DrawPanelWidget ui:field="panel" addStyleNames="{style.main-canvas}"/>

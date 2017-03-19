@@ -40,6 +40,9 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private Force.Link mousdownLink;
     private Force.Link selectedLink;
 
+    private Array<ElementNode> nodes = Array.create();
+    private Array<Force.Link> links = Array.create();
+
     private OrdinalScale color;
     private PowScale radius;
     private ElementNode currentElement = null;
@@ -85,8 +88,14 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
         init();
     }
 
-    Array<ElementNode> nodes = Array.create();
-    Array<Force.Link> links = Array.create();
+    public void clear() {
+        nodes = Array.create();
+        links = Array.create();
+        force.nodes(nodes);
+        force.links(links);
+
+        redraw();
+    }
 
     private void init() {
         color = D3.scale.category20();

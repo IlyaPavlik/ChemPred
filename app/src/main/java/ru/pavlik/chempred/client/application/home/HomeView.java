@@ -114,4 +114,9 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     public void onLinkDownClick(ClickEvent clickEvent) {
         panel.setLinkType(LinkType.DOWN);
     }
+
+    @UiHandler("clear")
+    public void onClearClick(ClickEvent clickEvent) {
+        panel.clear();
+    }
 }
