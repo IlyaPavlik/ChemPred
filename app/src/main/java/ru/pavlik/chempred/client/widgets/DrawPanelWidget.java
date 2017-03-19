@@ -41,7 +41,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private Force.Link selectedLink;
 
     private Array<ElementNode> nodes = Array.create();
-    private Array<Force.Link> links = Array.create();
+    private Array<ElementLink> links = Array.create();
 
     private OrdinalScale color;
     private PowScale radius;
@@ -62,7 +62,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
     public void setStructure(Structure structure) {
         if (force != null) {
-            Array<Force.Link> linkArray = Array.create();
+            Array<ElementLink> linkArray = Array.create();
             for (ElementLink link : structure.getElementLinks()) {
                 linkArray.push(link);
             }
@@ -95,6 +95,13 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
         force.links(links);
 
         redraw();
+    }
+
+    public Structure getStructure() {
+        Structure structure = new Structure();
+        structure.setElementLinks(links.asList());
+        structure.setElementNodes(nodes.asList());
+        return structure;
     }
 
     private void init() {

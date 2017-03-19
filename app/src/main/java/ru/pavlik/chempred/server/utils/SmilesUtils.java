@@ -138,7 +138,6 @@ public class SmilesUtils {
         String resultSmiles = links.get(0).getElementSource().getSymbol();
 
         for (int i = 0; i < links.size(); i++) {
-            System.out.println(links.get(i).getElementSource().getSymbol() + " : " + links.get(i).getElementTarget().getSymbol());
             boolean nextEl = containsNextElement(links, i);
 
             if (nextEl) resultSmiles += "(";

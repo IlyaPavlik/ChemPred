@@ -38,7 +38,7 @@
             </b:VerticalButtonGroup>
         </g:east>
         <g:south size="5">
-            <g:Label>Footer</g:Label>
+            <g:Button text="Prediction" ui:field="prediction"/>
         </g:south>
     </g:DockLayoutPanel>
 </ui:UiBinder>

@@ -34,7 +34,8 @@ public class ElementNode extends Force.Node<ElementNode> {
             y: y,
             atom: element.atom,
             size: element.size,
-            valence: element.valence
+            valence: element.valence,
+            data: element.data
         }
     }-*/;
 

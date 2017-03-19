@@ -9,6 +9,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
+import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.place.NameTokens;
 import ru.pavlik.chempred.client.services.element.ElementService;
@@ -18,6 +19,7 @@ import ru.pavlik.chempred.client.services.smiles.SmilesServiceAsync;
 import ru.pavlik.chempred.client.utils.Utils;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy> implements PresenterUiHandler {
 
@@ -73,6 +75,21 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             @Override
             public void onSuccess(StructureDao structure) {
                 getView().setStructure(structure);
+            }
+        });
+    }
+
+    @Override
+    public void handlePredictionClick(List<LinkDao> links) {
+        smilesService.parseStructure(links, new AsyncCallback<String>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Utils.console(caught);
+            }
+
+            @Override
+            public void onSuccess(String smils) {
+                Utils.console(smils);
             }
         });
     }

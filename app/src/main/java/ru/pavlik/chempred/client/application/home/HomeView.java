@@ -119,4 +119,11 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     public void onClearClick(ClickEvent clickEvent) {
         panel.clear();
     }
+
+    @UiHandler("prediction")
+    public void onPredictionClick(ClickEvent clickEvent) {
+        Structure structure = panel.getStructure();
+        StructureDao structureDao = structureConverter.convertToDao(structure);
+        getUiHandlers().handlePredictionClick(structureDao.getLinks());
+    }
 }

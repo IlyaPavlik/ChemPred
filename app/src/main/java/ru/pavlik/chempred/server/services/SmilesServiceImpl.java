@@ -34,6 +34,6 @@ public class SmilesServiceImpl extends RemoteServiceServlet implements SmilesSer
 
     @Override
     public String parseStructure(List<LinkDao> links) {
-        return null;
+        return SmilesUtils.parseStructure(links);
     }
 }
