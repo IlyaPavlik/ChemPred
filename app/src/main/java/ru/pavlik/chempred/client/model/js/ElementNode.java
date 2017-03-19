@@ -1,6 +1,7 @@
 package ru.pavlik.chempred.client.model.js;
 
 import com.github.gwtd3.api.layout.Force;
+import ru.pavlik.chempred.client.model.dao.ElementDao;
 
 public class ElementNode extends Force.Node<ElementNode> {
 
@@ -8,7 +9,9 @@ public class ElementNode extends Force.Node<ElementNode> {
     }
 
     public static native ElementNode create() /*-{
-        return {}
+        return {
+            size: 10
+        }
     }-*/;
 
     public static native ElementNode create(String atom, int size) /*-{
@@ -61,6 +64,10 @@ public class ElementNode extends Force.Node<ElementNode> {
         this.y = y;
     }-*/;
 
+    public final native void setData(ElementDao data) /*-{
+        this.data = data;
+    }-*/;
+
     public final native String getAtom() /*-{
         return this.atom;
     }-*/;
@@ -71,5 +78,9 @@ public class ElementNode extends Force.Node<ElementNode> {
 
     public final native int getValence() /*-{
         return this.valence;
+    }-*/;
+
+    public final native ElementDao getData() /*-{
+        return this.data;
     }-*/;
 }

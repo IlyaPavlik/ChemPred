@@ -9,9 +9,12 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
+import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.place.NameTokens;
 import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
+import ru.pavlik.chempred.client.services.smiles.SmilesService;
+import ru.pavlik.chempred.client.services.smiles.SmilesServiceAsync;
 import ru.pavlik.chempred.client.utils.Utils;
 
 import javax.inject.Inject;
@@ -19,9 +22,12 @@ import javax.inject.Inject;
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy> implements PresenterUiHandler {
 
     private ElementServiceAsync elementService;
+    private SmilesServiceAsync smilesService;
 
     interface MyView extends View, HasUiHandlers<PresenterUiHandler> {
         void setElement(ElementDao element);
+
+        void setStructure(StructureDao structure);
     }
 
     @ProxyStandard
@@ -38,6 +44,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         getView().setUiHandlers(this);
 
         elementService = ElementService.Service.getInstance();
+        smilesService = SmilesService.Service.getInstance();
     }
 
     @Override
@@ -51,6 +58,21 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             @Override
             public void onSuccess(ElementDao result) {
                 getView().setElement(result);
+            }
+        });
+    }
+
+    @Override
+    public void handleSmilesParse(String smiles) {
+        smilesService.parseSmiles(smiles, new AsyncCallback<StructureDao>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Utils.console(caught);
+            }
+
+            @Override
+            public void onSuccess(StructureDao structure) {
+                getView().setStructure(structure);
             }
         });
     }

@@ -7,9 +7,7 @@ public class ElementConverter extends BaseConverter<ElementDao, ElementNode> {
 
     @Override
     public ElementDao convertToDao(ElementNode elementNode) {
-        ElementDao elementDao = new ElementDao();
-        //TODO implement binding
-        return elementDao;
+        return new ElementDao(elementNode.getData());
     }
 
     @Override
@@ -17,6 +15,7 @@ public class ElementConverter extends BaseConverter<ElementDao, ElementNode> {
         ElementNode elementNode = ElementNode.create();
         elementNode.setAtom(elementDao.getSymbol());
         elementNode.setValence(elementDao.getValence());
+        elementNode.setData(elementDao);
         return elementNode;
     }
 }

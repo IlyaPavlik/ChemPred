@@ -10,7 +10,10 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import org.gwtbootstrap3.client.ui.VerticalButtonGroup;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.converter.ElementConverter;
+import ru.pavlik.chempred.client.model.converter.StructureConverter;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
+import ru.pavlik.chempred.client.model.dao.StructureDao;
+import ru.pavlik.chempred.client.model.js.Structure;
 import ru.pavlik.chempred.client.widgets.DrawPanelWidget;
 
 import javax.inject.Inject;
@@ -23,6 +26,7 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     VerticalButtonGroup menuLeft;
 
     private ElementConverter elementConverter = new ElementConverter();
+    private StructureConverter structureConverter = new StructureConverter();
 
     interface Binder extends UiBinder<Widget, HomeView> {
     }
@@ -43,6 +47,12 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     @Override
     public void setElement(ElementDao element) {
         panel.setCurrentElement(elementConverter.convertToNative(element));
+    }
+
+    @Override
+    public void setStructure(StructureDao structureDao) {
+        Structure structure = structureConverter.convertToNative(structureDao.getElements(), structureDao.getLinks());
+        panel.setStructure(structure);
     }
 
     @UiHandler("elementC")
@@ -77,7 +87,7 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
 
     @UiHandler("periodicTable")
     public void onPeriodicTableClick(ClickEvent clickEvent) {
-
+        // getUiHandlers().handleSmilesParse("CNC");
     }
 
     @UiHandler("linkOne")

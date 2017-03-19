@@ -18,6 +18,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.js.ElementLink;
 import ru.pavlik.chempred.client.model.js.ElementNode;
+import ru.pavlik.chempred.client.model.js.Structure;
 
 public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
@@ -54,6 +55,27 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
     public void setLinkType(LinkType linkType) {
         this.linkType = linkType;
+    }
+
+    public void setStructure(Structure structure) {
+        if (force != null) {
+            Array<Force.Link> linkArray = Array.create();
+            for (ElementLink link : structure.getElementLinks()) {
+                linkArray.push(link);
+            }
+            this.links = linkArray;
+            force.links(linkArray);
+
+            Array<ElementNode> nodeArray = Array.create();
+            for (ElementNode node : structure.getElementNodes()) {
+                nodeArray.push(node);
+            }
+
+            this.nodes = nodeArray;
+            force.nodes(nodeArray);
+
+            redraw();
+        }
     }
 
     public void init(int width, int height) {
@@ -211,7 +233,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                             selectedLink = null;
 
                             dragLine
-                                    .attr("class", "link")
+                                    .attr("class", "drag_line")
                                     .attr("x1", mousdownNode.x())
                                     .attr("y1", mousdownNode.y())
                                     .attr("x2", mousdownNode.x())

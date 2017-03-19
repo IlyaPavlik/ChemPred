@@ -3,6 +3,7 @@ package ru.pavlik.chempred.client.model.dao;
 import java.io.Serializable;
 
 public class ElementDao implements Serializable {
+
     private Integer id;
     private String symbol;
     private String name;
@@ -11,6 +12,20 @@ public class ElementDao implements Serializable {
     private Integer group;
     private Integer valence;
     private Double electronegativity;
+
+    public ElementDao() {
+    }
+
+    public ElementDao(ElementDao elementDao) {
+        setId(elementDao.getId());
+        setSymbol(elementDao.getSymbol());
+        setName(elementDao.getName());
+        setPeriod(elementDao.getPeriod());
+        setWeight(elementDao.getWeight());
+        setGroup(elementDao.getGroup());
+        setValence(elementDao.getValence());
+        setElectronegativity(elementDao.getElectronegativity());
+    }
 
     public Integer getId() {
         return id;

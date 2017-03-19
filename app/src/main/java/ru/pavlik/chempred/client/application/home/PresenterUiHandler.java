@@ -4,4 +4,5 @@ import com.gwtplatform.mvp.client.UiHandlers;
 
 public interface PresenterUiHandler extends UiHandlers {
     void handleElementClick(String sign);
+    void handleSmilesParse(String smiles);
 }
