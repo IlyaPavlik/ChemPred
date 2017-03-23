@@ -8,9 +8,12 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import ru.pavlik.chempred.client.application.periodictable.PeriodicTablePresenter;
+import ru.pavlik.chempred.client.application.periodictable.PeriodicTableView;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
+import ru.pavlik.chempred.client.model.events.SelectElementEvent;
 import ru.pavlik.chempred.client.place.NameTokens;
 import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
@@ -25,6 +28,9 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     private ElementServiceAsync elementService;
     private SmilesServiceAsync smilesService;
+
+    @Inject
+    PeriodicTableView periodicTableView;
 
     interface MyView extends View, HasUiHandlers<PresenterUiHandler> {
         void setElement(ElementDao element);
@@ -47,6 +53,10 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
         elementService = ElementService.Service.getInstance();
         smilesService = SmilesService.Service.getInstance();
+
+        eventBus.addHandler(SelectElementEvent.TYPE, event -> {
+            getView().setElement(event.getElementDao());
+        });
     }
 
     @Override
@@ -92,5 +102,10 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
                 Utils.console(smils);
             }
         });
+    }
+
+    @Override
+    public void handlePeriodicTableClick() {
+        addToPopupSlot(new PeriodicTablePresenter(getEventBus(), periodicTableView));
     }
 }

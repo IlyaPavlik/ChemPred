@@ -1,0 +1,48 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+    <ui:style type="ru.pavlik.chempred.client.application.periodictable.PeriodicTableView.Style">
+        .popup {
+            background-color: white;
+            border: 3px solid black;
+            padding: 0 15px;
+            width: 80%;
+            height: 80%;
+        }
+
+        .popup_background {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .periodic_table {
+            width: 100%;
+            height: 100%;
+        }
+
+        .cell {
+            border: 1px solid black;
+            width: 100%;
+            height: 100%;
+            font-size: 16pt;
+        }
+
+        .cell:hover {
+            cursor: pointer;
+            border: 1px solid red;
+        }
+
+        .popupContent {
+            width: 100%;
+            height: 100%;
+        }
+
+        td {
+            padding: 3px;
+            text-align: center;
+        }
+    </ui:style>
+
+    <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true" styleName="{style.popup}"
+                  glassEnabled="true" glassStyleName="{style.popup_background}">
+
+        <g:Grid styleName="{style.periodic_table}" ui:field="grid"/>
+    </g:PopupPanel>
+</ui:UiBinder>

@@ -87,7 +87,7 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
 
     @UiHandler("periodicTable")
     public void onPeriodicTableClick(ClickEvent clickEvent) {
-        // getUiHandlers().handleSmilesParse("CNC");
+        getUiHandlers().handlePeriodicTableClick();
     }
 
     @UiHandler("linkOne")

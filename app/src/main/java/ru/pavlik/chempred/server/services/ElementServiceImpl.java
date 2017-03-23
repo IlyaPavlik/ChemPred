@@ -9,6 +9,7 @@ import ru.pavlik.chempred.server.model.Element;
 import ru.pavlik.chempred.server.model.converter.ElementConverter;
 import ru.pavlik.chempred.server.utils.HibernateUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ElementServiceImpl extends RemoteServiceServlet implements ElementService {
@@ -20,7 +21,14 @@ public class ElementServiceImpl extends RemoteServiceServlet implements ElementS
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         Query query = session.createQuery("from Element");
-        return query.list();
+
+        List<Element> elements = query.list();
+        List<ElementDao> elementDaoList = new ArrayList<>();
+        for (Element element : elements) {
+            elementDaoList.add(elementConverter.convertToDao(element));
+        }
+
+        return elementDaoList;
     }
 
     @Override

@@ -5,10 +5,12 @@ import ru.pavlik.chempred.client.model.dao.LinkDao;
 
 import java.util.List;
 
-public interface PresenterUiHandler extends UiHandlers {
+interface PresenterUiHandler extends UiHandlers {
     void handleElementClick(String sign);
 
     void handleSmilesParse(String smiles);
 
     void handlePredictionClick(List<LinkDao> links);
+
+    void handlePeriodicTableClick();
 }
