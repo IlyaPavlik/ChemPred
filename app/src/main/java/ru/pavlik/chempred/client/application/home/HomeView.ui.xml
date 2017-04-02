@@ -38,7 +38,10 @@
             </b:VerticalButtonGroup>
         </g:east>
         <g:south size="5">
-            <g:Button text="Prediction" ui:field="prediction"/>
+            <g:FlowPanel>
+                <g:Button text="Train" ui:field="train"/>
+                <g:Button text="Prediction" ui:field="prediction"/>
+            </g:FlowPanel>
         </g:south>
     </g:DockLayoutPanel>
 </ui:UiBinder>

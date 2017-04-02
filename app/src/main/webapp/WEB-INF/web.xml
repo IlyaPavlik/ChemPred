@@ -7,7 +7,7 @@
     <!-- Servlets -->
     <servlet>
         <servlet-name>ChemPredServlet</servlet-name>
-        <servlet-class>ru.pavlik.chempred.server.ChemPredServiceImp</servlet-class>
+        <servlet-class>ru.pavlik.chempred.server.services.PredictionServiceImp</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>ElementService</servlet-name>
@@ -20,7 +20,7 @@
 
     <servlet-mapping>
         <servlet-name>ChemPredServlet</servlet-name>
-        <url-pattern>/ChemPred/message</url-pattern>
+        <url-pattern>/ChemPred/prediction</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ElementService</servlet-name>

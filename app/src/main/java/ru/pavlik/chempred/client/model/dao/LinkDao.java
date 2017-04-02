@@ -42,4 +42,9 @@ public class LinkDao implements Serializable {
     public void setLinkType(LinkType linkType) {
         this.linkType = linkType;
     }
+
+    public boolean hasElement(ElementDao elementDao) {
+        return elementDao == elementSource
+                || elementDao == elementTarget;
+    }
 }

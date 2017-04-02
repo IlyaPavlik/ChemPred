@@ -126,4 +126,9 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
         StructureDao structureDao = structureConverter.convertToDao(structure);
         getUiHandlers().handlePredictionClick(structureDao.getLinks());
     }
+
+    @UiHandler("train")
+    public void onTrainClick(ClickEvent clickEvent) {
+        getUiHandlers().handleTrainClick();
+    }
 }

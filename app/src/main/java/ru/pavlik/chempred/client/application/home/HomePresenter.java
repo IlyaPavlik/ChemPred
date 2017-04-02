@@ -17,6 +17,8 @@ import ru.pavlik.chempred.client.model.events.SelectElementEvent;
 import ru.pavlik.chempred.client.place.NameTokens;
 import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
+import ru.pavlik.chempred.client.services.prediction.PredictionService;
+import ru.pavlik.chempred.client.services.prediction.PredictionServiceAsync;
 import ru.pavlik.chempred.client.services.smiles.SmilesService;
 import ru.pavlik.chempred.client.services.smiles.SmilesServiceAsync;
 import ru.pavlik.chempred.client.utils.Utils;
@@ -28,6 +30,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     private ElementServiceAsync elementService;
     private SmilesServiceAsync smilesService;
+    private PredictionServiceAsync predictionService;
 
     @Inject
     PeriodicTableView periodicTableView;
@@ -53,6 +56,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
         elementService = ElementService.Service.getInstance();
         smilesService = SmilesService.Service.getInstance();
+        predictionService = PredictionService.App.getInstance();
 
         eventBus.addHandler(SelectElementEvent.TYPE, event -> {
             getView().setElement(event.getElementDao());
@@ -90,16 +94,31 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     }
 
     @Override
-    public void handlePredictionClick(List<LinkDao> links) {
-        smilesService.parseStructure(links, new AsyncCallback<String>() {
+    public void handleTrainClick() {
+        predictionService.train(new AsyncCallback<Double>() {
             @Override
             public void onFailure(Throwable caught) {
                 Utils.console(caught);
             }
 
             @Override
-            public void onSuccess(String smils) {
-                Utils.console(smils);
+            public void onSuccess(Double result) {
+                Utils.console("Total error: " + result);
+            }
+        });
+    }
+
+    @Override
+    public void handlePredictionClick(List<LinkDao> links) {
+        predictionService.predict(links, new AsyncCallback<Double>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Utils.console(caught);
+            }
+
+            @Override
+            public void onSuccess(Double result) {
+                Utils.console(result);
             }
         });
     }

@@ -10,6 +10,8 @@ interface PresenterUiHandler extends UiHandlers {
 
     void handleSmilesParse(String smiles);
 
+    void handleTrainClick();
+
     void handlePredictionClick(List<LinkDao> links);
 
     void handlePeriodicTableClick();

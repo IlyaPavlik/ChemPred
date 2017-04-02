@@ -48,8 +48,9 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.gwtbootstrap3:gwtbootstrap3:0.9.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-mvp-client:1.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-clients-common:1.5" level="project" />
-    <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />
-    <orderEntry type="library" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.inject:guice:3.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: javax.inject:javax.inject:1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.gwtplatform:gwtp-mvp-shared:1.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.gwt:gwt-user:2.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.jsinterop:jsinterop-annotations:1.0.1" level="project" />
@@ -65,18 +66,19 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.ow2.asm:asm-commons:5.0.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: colt:colt:1.2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: ant:ant:1.6.5" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-io:commons-io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.ibm.icu:icu4j:50.1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: tapestry:tapestry:4.0.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.sourceforge.htmlunit:htmlunit:2.19" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: xalan:xalan:2.7.2" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: xalan:serializer:2.7.2" level="project" />
+    <orderEntry type="library" name="Maven: xalan:xalan:2.7.2" level="project" />
+    <orderEntry type="library" name="Maven: xalan:serializer:2.7.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpclient:4.5.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpcore:4.4.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.httpcomponents:httpmime:4.5.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.sourceforge.htmlunit:htmlunit-core-js:2.17" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: xerces:xercesImpl:2.11.0" level="project" />
+    <orderEntry type="library" name="Maven: xerces:xercesImpl:2.11.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.22" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.sourceforge.cssparser:cssparser:0.9.18" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.eclipse.jetty.websocket:websocket-client:9.2.13.v20150730" level="project" />
@@ -103,53 +105,11 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.gwt.inject:gin:2.1.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.inject.extensions:guice-assistedinject:3.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.velocity:velocity:1.7" level="project" />
-    <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.4" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: commons-lang:commons-lang:2.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.gwtd3:gwt-d3-api:1.3.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.gwtd3:gwt-d3-js:3.5.11" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.gwtd3:gwt-d3-js:sources:3.5.11" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.gwtd3:gwt-d3-api:sources:1.3.0" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow-platform:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco:javacpp:1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow:android-arm:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow:android-x86:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow:linux-x86:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow:linux-x86_64:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.bytedeco.javacpp-presets:tensorflow:macosx-x86_64:0.11.0-1.3" level="project" />
-    <orderEntry type="library" name="Maven: com.github.sanity:quickml:0.10.15" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.supercsv:super-csv:2.2.0" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.efficient-java-matrix-library:ejml:0.23" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.opencsv:opencsv:2.3" level="project" />
-    <orderEntry type="library" name="Maven: it.unimi.dsi:fastutil:7.0.7" level="project" />
-    <orderEntry type="library" name="Maven: jfree:jfreechart:1.0.12" level="project" />
-    <orderEntry type="library" name="Maven: jfree:jcommon:1.0.15" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk:1.0.002" level="project" />
-    <orderEntry type="library" name="Maven: commons-httpclient:commons-httpclient:3.1" level="project" />
-    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.3" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.4.5" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.3" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:stats-util:0.0.15" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:util:0.0.44" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:util-executor-service-shutdown:0.0.13" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:jdk-logging:0.0.18" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:base:0.0.39" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:util-system-mocks:0.0.27" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:collections:0.0.35" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:quantity:0.0.31" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:stats:0.0.44" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:stat-registry:0.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:stat:0.0.2" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:stats-provider:0.0.23" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:application-action:0.0.27" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:net-util:0.0.30" level="project" />
-    <orderEntry type="library" name="Maven: com.twitter.common:util-sampler:0.0.22" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:1.3.9" level="project" />
-    <orderEntry type="library" name="Maven: javax.inject:javax.inject:1" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.google.guava:guava:15.0" level="project" />
-    <orderEntry type="library" name="Maven: org.javatuples:javatuples:1.2" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:2.7" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
@@ -170,5 +130,93 @@
     <orderEntry type="library" name="Maven: javax.persistence:persistence-api:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.24" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.24" level="project" />
+    <orderEntry type="library" name="Maven: org.neuroph:neuroph-core:2.9" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-nop:1.7.6" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-bundle:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-interfaces:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: javax.vecmath:vecmath:1.5.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-core:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:17.0" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-standard:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-atomtype:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-valencycheck:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-diff:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-data:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-ioformats:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-silent:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-isomorphism:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-datadebug:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-io:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-formula:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-dict:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: xom:xom:1.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-pdb:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-libiocml:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.xml-cml:cmlxom:3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.xml-cml:euclid:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-math:2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.ccil.cowan.tagsoup:tagsoup:1.2" level="project" />
+    <orderEntry type="library" name="Maven: joda-time:joda-time:1.6.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-smiles:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: uk.ac.ebi.beam:beam-core:0.9.2" level="project" />
+    <orderEntry type="library" name="Maven: uk.ac.ebi.beam:beam-func:0.9.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-extra:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: gov.nist.math:jama:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-log4j:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-smarts:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-reaction:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-fingerprint:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-math3:3.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-cip:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-signature:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: com.github.gilleain.signatures:signatures:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-charges:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-forcefield:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-sdg:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-builder3dtools:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-builder3d:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsar:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-ionpot:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsaratomic:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsarbond:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-hash:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-fragment:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-model:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsarmolecular:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsarcml:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsarionpot:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qsarprotein:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-render:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-renderbasic:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-renderawt:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-renderextra:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-control:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-qm:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-iordf:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-core:2.7.4" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.jena:jena-iri:0.9.4" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-libiomd:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-pdbcml:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-inchi:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.jni-inchi:jni-inchi:0.8" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.jnati:jnati-deploy:0.4" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.jnati:jnati-core:0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-group:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-pcore:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-smsd:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-structgen:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-tautomer:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-legacy:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: jgrapht:jgrapht:0.6.0" level="project" />
+    <orderEntry type="library" name="Maven: org.openscience.cdk:cdk-depict:1.5.14" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-graphicsio-svg:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-graphics2d:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-graphicsio:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-io:2.2.2" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-graphicsio-tests:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-graphicsbase:2.4" level="project" />
+    <orderEntry type="library" name="Maven: org.freehep:freehep-graphicsio-pdf:2.4" level="project" />
   </component>
 </module>
