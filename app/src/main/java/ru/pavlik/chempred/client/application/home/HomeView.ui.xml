@@ -3,45 +3,73 @@
              xmlns:b="urn:import:org.gwtbootstrap3.client.ui"
              xmlns:c="urn:import:ru.pavlik.chempred.client.widgets">
 
+    <ui:with field="resources" type="ru.pavlik.chempred.client.utils.AppBundle"/>
     <ui:style src="home-view.css"/>
 
-    <ui:import field='ru.pavlik.chempred.client.application.home.HomeConstants.*'/>
-
-    <g:DockLayoutPanel unit="EM">
-        <g:north size="5">
-            <g:Label>Header</g:Label>
-        </g:north>
-        <g:west size="6">
-            <g:FlowPanel>
-                <b:VerticalButtonGroup ui:field="menuLeft" addStyleNames="{style.menu-left}" dataToggle="BUTTONS">
-                    <b:RadioButton name="elementGroup" text="C" ui:field="elementC"/>
-                    <b:RadioButton name="elementGroup" text="O" ui:field="elementO"/>
-                    <b:RadioButton name="elementGroup" text="P" ui:field="elementP"/>
-                    <b:RadioButton name="elementGroup" text="S" ui:field="elementS"/>
-                    <b:RadioButton name="elementGroup" text="N" ui:field="elementN"/>
-                    <b:RadioButton name="elementGroup" text="Cl" ui:field="elementCl"/>
-                    <b:RadioButton name="elementGroup" text="Table" ui:field="periodicTable"/>
+    <g:Grid>
+        <g:row>
+            <g:cell/>
+            <g:customCell styleName="{style.top}">
+                <g:Label>Header</g:Label>
+            </g:customCell>
+            <g:cell/>
+        </g:row>
+        <g:row>
+            <g:customCell styleName="{style.left}">
+                <g:FlowPanel>
+                    <b:VerticalButtonGroup ui:field="menuLeft" dataToggle="BUTTONS" addStyleNames="{style.left}">
+                        <b:RadioButton name="elementGroup" text="C" ui:field="elementC"
+                                       addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton name="elementGroup" text="O" ui:field="elementO"
+                                       addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton name="elementGroup" text="P" ui:field="elementP"
+                                       addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton name="elementGroup" text="S" ui:field="elementS"
+                                       addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton name="elementGroup" text="N" ui:field="elementN"
+                                       addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton name="elementGroup" text="Cl" ui:field="elementCl"
+                                       addStyleNames="{style.button} {style.button-symbol}"/>
+                        <c:ImageRadioButton name="elementGroup" ui:field="periodicTable"
+                                            addStyleNames="{style.button} {style.button-table}"
+                                            resource="{resources.periodicTable}"/>
+                    </b:VerticalButtonGroup>
+                    <c:ImageButton ui:field="clear" resource="{resources.clear}"
+                                   addStyleNames="{style.button}  {style.button-clear}"/>
+                </g:FlowPanel>
+            </g:customCell>
+            <g:customCell>
+                <c:DrawPanelWidget ui:field="panel" addStyleNames="{style.main-canvas}"/>
+            </g:customCell>
+            <g:customCell styleName="{style.right}">
+                <b:VerticalButtonGroup id="menu_right" dataToggle="BUTTONS" addStyleNames="{style.left}">
+                    <c:ImageRadioButton name="linkGroup" ui:field="linkOne" active="true"
+                                        addStyleNames="{style.button} {style.button-line}"
+                                        resource="{resources.singleLine}"/>
+                    <c:ImageRadioButton name="linkGroup" ui:field="linkTwo"
+                                        addStyleNames="{style.button} {style.button-line}"
+                                        resource="{resources.doubleLine}"/>
+                    <c:ImageRadioButton name="linkGroup" ui:field="linkThree"
+                                        addStyleNames="{style.button} {style.button-line}"
+                                        resource="{resources.tripleLine}"/>
+                    <c:ImageRadioButton name="linkGroup" ui:field="linkTop"
+                                        addStyleNames="{style.button} {style.button-line}"
+                                        resource="{resources.singleUpLineLine}"/>
+                    <c:ImageRadioButton name="linkGroup" ui:field="linkDown"
+                                        addStyleNames="{style.button} {style.button-line}"
+                                        resource="{resources.singleDownLineLine}"/>
                 </b:VerticalButtonGroup>
-                <b:Button text="Clear" ui:field="clear" type="DEFAULT"/>
-            </g:FlowPanel>
-        </g:west>
-        <g:center>
-            <c:DrawPanelWidget ui:field="panel" addStyleNames="{style.main-canvas}"/>
-        </g:center>
-        <g:east size="6">
-            <b:VerticalButtonGroup id="menu_right" addStyleNames="{style.menu-right}" dataToggle="BUTTONS">
-                <b:RadioButton name="linkGroup" ui:field="linkOne" active="true">Line</b:RadioButton>
-                <b:RadioButton name="linkGroup" ui:field="linkTwo">Line-2</b:RadioButton>
-                <b:RadioButton name="linkGroup" ui:field="linkThree">Line-3</b:RadioButton>
-                <b:RadioButton name="linkGroup" ui:field="linkTop">Top-Line</b:RadioButton>
-                <b:RadioButton name="linkGroup" ui:field="linkDown">Bottom-Line</b:RadioButton>
-            </b:VerticalButtonGroup>
-        </g:east>
-        <g:south size="5">
-            <g:FlowPanel>
-                <g:Button text="Train" ui:field="train"/>
-                <g:Button text="Prediction" ui:field="prediction"/>
-            </g:FlowPanel>
-        </g:south>
-    </g:DockLayoutPanel>
+            </g:customCell>
+        </g:row>
+        <g:row>
+            <g:cell/>
+            <g:customCell styleName="{style.bottom}">
+                <g:HorizontalPanel>
+                    <g:Button text="Train" ui:field="train"/>
+                    <g:Button text="Prediction" ui:field="prediction"/>
+                </g:HorizontalPanel>
+            </g:customCell>
+            <g:cell/>
+        </g:row>
+    </g:Grid>
 </ui:UiBinder>

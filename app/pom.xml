@@ -14,6 +14,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <slf4jVersion>1.7.24</slf4jVersion>
+        <bootstrap.version>0.9.3</bootstrap.version>
     </properties>
 
     <dependencyManagement>
@@ -29,12 +30,20 @@
     </dependencyManagement>
 
     <dependencies>
+        <!-- Bootstrap 3-->
         <dependency>
             <groupId>org.gwtbootstrap3</groupId>
             <artifactId>gwtbootstrap3</artifactId>
-            <version>0.9.3</version>
+            <version>${bootstrap.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.gwtbootstrap3</groupId>
+            <artifactId>gwtbootstrap3-extras</artifactId>
+            <version>${bootstrap.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.gwtplatform</groupId>
             <artifactId>gwtp-mvp-client</artifactId>

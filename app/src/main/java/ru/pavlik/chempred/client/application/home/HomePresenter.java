@@ -1,6 +1,5 @@
 package ru.pavlik.chempred.client.application.home;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
@@ -14,6 +13,7 @@ import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.model.events.SelectElementEvent;
+import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
 import ru.pavlik.chempred.client.place.NameTokens;
 import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
@@ -65,12 +65,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     @Override
     public void handleElementClick(String sign) {
-        elementService.getElement(sign, new AsyncCallback<ElementDao>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+        elementService.getElement(sign, new ErrorHandlerCallback<ElementDao>() {
             @Override
             public void onSuccess(ElementDao result) {
                 getView().setElement(result);
@@ -80,12 +75,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     @Override
     public void handleSmilesParse(String smiles) {
-        smilesService.parseSmiles(smiles, new AsyncCallback<StructureDao>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+        smilesService.parseSmiles(smiles, new ErrorHandlerCallback<StructureDao>() {
             @Override
             public void onSuccess(StructureDao structure) {
                 getView().setStructure(structure);
@@ -95,12 +85,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     @Override
     public void handleTrainClick() {
-        predictionService.train(new AsyncCallback<Double>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+        predictionService.train(new ErrorHandlerCallback<Double>() {
             @Override
             public void onSuccess(Double result) {
                 Utils.console("Total error: " + result);
@@ -110,12 +95,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     @Override
     public void handlePredictionClick(List<LinkDao> links) {
-        predictionService.predict(links, new AsyncCallback<Double>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+        predictionService.predict(links, new ErrorHandlerCallback<Double>() {
             @Override
             public void onSuccess(Double result) {
                 Utils.console(result);

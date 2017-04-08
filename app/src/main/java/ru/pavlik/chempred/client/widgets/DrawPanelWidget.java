@@ -15,6 +15,8 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
+import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.js.ElementLink;
 import ru.pavlik.chempred.client.model.js.ElementNode;
@@ -378,10 +380,15 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                     links.push(ElementLink.create(mousdownNode, newNode, linkType));
                 }
                 redraw();
-            } else if (nodes.length() == 0) {
+            } else if (nodes.length() == 0 && currentElement != null) {
                 Coords coords = D3.mouseAsCoords(context);
                 nodes.push(ElementNode.create(coords.x(), coords.y(), currentElement));
                 redraw();
+            } else {
+                //TODO refactor, move to utils class
+                NotifySettings settings = NotifySettings.newSettings();
+                settings.setDelay(2000);
+                Notify.notify("Выберите химический элемент", settings);
             }
             // clear mouse event vars
             resetMouseVars();

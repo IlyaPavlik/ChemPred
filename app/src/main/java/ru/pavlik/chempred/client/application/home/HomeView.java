@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import org.gwtbootstrap3.client.ui.VerticalButtonGroup;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.converter.ElementConverter;
 import ru.pavlik.chempred.client.model.converter.StructureConverter;
@@ -22,8 +21,6 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
 
     @UiField
     DrawPanelWidget panel;
-    @UiField
-    VerticalButtonGroup menuLeft;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
