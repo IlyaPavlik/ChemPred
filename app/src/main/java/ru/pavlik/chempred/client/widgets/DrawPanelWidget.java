@@ -384,7 +384,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 Coords coords = D3.mouseAsCoords(context);
                 nodes.push(ElementNode.create(coords.x(), coords.y(), currentElement));
                 redraw();
-            } else {
+            } else if (currentElement == null) {
                 //TODO refactor, move to utils class
                 NotifySettings settings = NotifySettings.newSettings();
                 settings.setDelay(2000);
