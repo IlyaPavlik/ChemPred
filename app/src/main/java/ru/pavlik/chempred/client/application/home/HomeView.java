@@ -20,7 +20,7 @@ import javax.inject.Inject;
 public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements HomePresenter.MyView {
 
     @UiField
-    DrawPanelWidget panel;
+    DrawPanelWidget drawPanel;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
@@ -38,18 +38,18 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
         super.onAttach();
 
         Scheduler.get().scheduleDeferred(() ->
-                panel.init(panel.getOffsetWidth(), panel.getOffsetHeight()));
+                drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight()));
     }
 
     @Override
     public void setElement(ElementDao element) {
-        panel.setCurrentElement(elementConverter.convertToNative(element));
+        drawPanel.setCurrentElement(elementConverter.convertToNative(element));
     }
 
     @Override
     public void setStructure(StructureDao structureDao) {
         Structure structure = structureConverter.convertToNative(structureDao.getElements(), structureDao.getLinks());
-        panel.setStructure(structure);
+        drawPanel.setStructure(structure);
     }
 
     @UiHandler("elementC")
@@ -89,37 +89,37 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
 
     @UiHandler("linkOne")
     public void onLinkOneClick(ClickEvent clickEvent) {
-        panel.setLinkType(LinkType.SINGLE);
+        drawPanel.setLinkType(LinkType.SINGLE);
     }
 
     @UiHandler("linkTwo")
     public void onLinkTwoClick(ClickEvent clickEvent) {
-        panel.setLinkType(LinkType.DOUBLE);
+        drawPanel.setLinkType(LinkType.DOUBLE);
     }
 
     @UiHandler("linkThree")
     public void onLinkThreeClick(ClickEvent clickEvent) {
-        panel.setLinkType(LinkType.TRIPLE);
+        drawPanel.setLinkType(LinkType.TRIPLE);
     }
 
     @UiHandler("linkTop")
     public void onLinkTopClick(ClickEvent clickEvent) {
-        panel.setLinkType(LinkType.TOP);
+        drawPanel.setLinkType(LinkType.TOP);
     }
 
     @UiHandler("linkDown")
     public void onLinkDownClick(ClickEvent clickEvent) {
-        panel.setLinkType(LinkType.DOWN);
+        drawPanel.setLinkType(LinkType.DOWN);
     }
 
     @UiHandler("clear")
     public void onClearClick(ClickEvent clickEvent) {
-        panel.clear();
+        drawPanel.clear();
     }
 
     @UiHandler("prediction")
     public void onPredictionClick(ClickEvent clickEvent) {
-        Structure structure = panel.getStructure();
+        Structure structure = drawPanel.getStructure();
         StructureDao structureDao = structureConverter.convertToDao(structure);
         getUiHandlers().handlePredictionClick(structureDao.getLinks());
     }

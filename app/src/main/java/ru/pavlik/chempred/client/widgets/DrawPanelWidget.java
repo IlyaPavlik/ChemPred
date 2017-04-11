@@ -21,6 +21,7 @@ import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.js.ElementLink;
 import ru.pavlik.chempred.client.model.js.ElementNode;
 import ru.pavlik.chempred.client.model.js.Structure;
+import ru.pavlik.chempred.client.utils.AppBundle;
 
 public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
@@ -33,6 +34,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private Selection zoomSelection;
     private Selection vis;
     private Selection dragLine;
+    private Selection dragPath;
     private Force force;
     private Zoom zoom;
 
@@ -51,6 +53,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private LinkType linkType = LinkType.SINGLE;
 
     public DrawPanelWidget() {
+        AppBundle.INSTANCE.elementsCss().ensureInjected();
     }
 
     public void setCurrentElement(ElementNode currentElement) {
@@ -128,10 +131,23 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 .on(BrowserEvents.MOUSEDOWN, mouseDown())
                 .on(BrowserEvents.MOUSEUP, mouseUp());
 
+
         vis.append("svg:rect")
                 .attr("width", width)
                 .attr("height", height)
                 .attr("fill", "white");
+
+        //define pattern for Down link
+        vis.append("defs")
+                .append("pattern")
+                .attr("id", "mask-stripe")
+                .attr("patternUnits", "userSpaceOnUse")
+                .attr("width", "5")
+                .attr("height", "5")
+                .append("rect")
+                .attr("width", "2")
+                .attr("height", "12")
+                .attr("fill", "black");
 
         force = D3.layout().force()
                 .size(width, height)
@@ -148,6 +164,9 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                 .attr("y1", 0)
                 .attr("x2", 0)
                 .attr("y2", 0);
+
+        dragPath = vis.append("path")
+                .attr("class", "link_triangle");
 
         D3.select("body")
                 .on(BrowserEvents.KEYDOWN, (context, d, index) -> {
@@ -171,7 +190,9 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
     private DatumFunction<Void> tick() {
         return (context, d, index) -> {
-            vis.selectAll(".link")
+            //draw simple links
+            vis.selectAll(".link_container")
+                    .selectAll("line")
                     .attr("x1", (context1, d1, index1) -> {
                         return d1.<Force.Link>as().source().x();
                     })
@@ -185,6 +206,23 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                         return d1.<Force.Link>as().target().y();
                     });
 
+            //draw triangle links
+            vis.selectAll(".link_container")
+                    .selectAll("path")
+                    .attr("d", (context1, d1, index1) -> {
+                        ElementLink elementLink = d1.<ElementLink>as();
+                        double x = elementLink.target().x() - elementLink.source().x();
+                        double y = elementLink.target().y() - elementLink.source().y();
+                        return getTrianglePath(x, y);
+                    })
+                    .attr("transform", (context1, d1, index1) -> {
+                        ElementLink elementLink = d1.<ElementLink>as();
+                        double x = elementLink.target().x() - elementLink.source().x();
+                        double y = elementLink.target().y() - elementLink.source().y();
+                        return getTriangleTransform(elementLink.source().x(), elementLink.source().y(), x, y);
+                    });
+
+            //draw nodes
             vis.selectAll(".node")
                     .attr("transform", (context1, d1, index1) -> {
                         ElementNode node = d1.<ElementNode>as();
@@ -214,28 +252,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     }
 
     private void redraw() {
-        UpdateSelection linkDataSelection = vis.selectAll(".link").data(links);
-        linkDataSelection.enter()
-                .insert("line", ".node")
-                .attr("class", "link")
-                .attr("stroke", (context, d, index) -> {
-                    ElementLink elementLink = d.<ElementLink>as();
-                    switch (elementLink.getType()) {
-                        case SINGLE:
-                            return "green";
-                        case DOUBLE:
-                            return "blue";
-                        case TRIPLE:
-                            return "red";
-                        case TOP:
-                            return "yellow";
-                        case DOWN:
-                            return "orange";
-                        default:
-                            return "black";
-                    }
-                });
-        linkDataSelection.exit().remove();
+        drawLinks();
 
         UpdateSelection dataSelection = vis.selectAll(".node").data(nodes);
         dataSelection.enter().append("g")
@@ -334,6 +351,87 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
         force.start();
     }
 
+    private void drawLinks() {
+        UpdateSelection linkDataSelection = vis.selectAll(".link_container").data(links);
+        Selection linkSelections = linkDataSelection.enter()
+                .insert("g", ".node")
+                .attr("class", "link_container");
+
+        //Draw single links
+        linkSelections.filter((context, d, index) -> {
+            ElementLink elementLink = d.<ElementLink>as();
+            return elementLink.getType() == LinkType.SINGLE ? context : null;
+        })
+                .append("line")
+                .attr("class", "link")
+                .style("stroke-width", (context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    return (elementLink.getType().getWeight() * 2 - 1) * 2 + "px";
+                });
+
+        //Draw double links
+        linkSelections.filter((context, d, index) -> {
+            ElementLink elementLink = d.<ElementLink>as();
+            return elementLink.getType() == LinkType.DOUBLE ? context : null;
+        })
+                .append("line")
+                .attr("class", "link_double_separator");
+
+        //Draw triple links
+        Selection tripleSelection = linkSelections.filter((context, d, index) -> {
+            ElementLink elementLink = d.<ElementLink>as();
+            return elementLink.getType() == LinkType.TRIPLE ? context : null;
+        });
+        tripleSelection.append("line")
+                .attr("class", "link_triple_separator");
+        tripleSelection.append("line")
+                .attr("class", "link");
+
+        //Draw triangle links
+        linkSelections
+                .filter((context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    return elementLink.getType() == LinkType.TOP ? context : null;
+                })
+                .append("path")
+                .style("fill", "black")
+                .attr("d", (context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    double x = elementLink.target().x() - elementLink.source().x();
+                    double y = elementLink.target().y() - elementLink.source().y();
+                    return getTrianglePath(x, y);
+                })
+                .attr("transform", (context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    double x = elementLink.target().x() - elementLink.source().x();
+                    double y = elementLink.target().y() - elementLink.source().y();
+                    return getTriangleTransform(elementLink.source().x(), elementLink.source().y(), x, y);
+                });
+
+        linkSelections
+                .filter((context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    return elementLink.getType() == LinkType.DOWN ? context : null;
+                })
+                .append("path")
+                .style("fill", "url(#mask-stripe)")
+                .attr("d", (context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    double x = elementLink.target().x() - elementLink.source().x();
+                    double y = elementLink.target().y() - elementLink.source().y();
+                    return getTrianglePath(x, y);
+                })
+                .attr("transform", (context, d, index) -> {
+                    ElementLink elementLink = d.<ElementLink>as();
+                    double x = elementLink.target().x() - elementLink.source().x();
+                    double y = elementLink.target().y() - elementLink.source().y();
+                    return getTriangleTransform(elementLink.source().x(), elementLink.source().y(), x, y);
+                });
+        ;
+
+        linkDataSelection.exit().remove();
+    }
+
     private DatumFunction<Void> mouseDown() {
         return (context, d, index) -> {
             if (mousdownNode == null && mousdownLink == null) {
@@ -350,11 +448,23 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
             }
 
             Coords coords = D3.mouseAsCoords(context);
-            dragLine
-                    .attr("x1", mousdownNode.x())
-                    .attr("y1", mousdownNode.y())
-                    .attr("x2", coords.x())
-                    .attr("y2", coords.y());
+
+            if (linkType == LinkType.TOP || linkType == LinkType.DOWN) {
+                double x = coords.x() - mousdownNode.x();
+                double y = coords.y() - mousdownNode.y();
+
+                dragPath
+                        .attr("fill", (context1, d1, index1) ->
+                                linkType == LinkType.TOP ? "black" : "url(#mask-stripe)")
+                        .attr("d", getTrianglePath(x, y))
+                        .attr("transform", getTriangleTransform(mousdownNode.x(), mousdownNode.y(), x, y));
+            } else {
+                dragLine
+                        .attr("x1", mousdownNode.x())
+                        .attr("y1", mousdownNode.y())
+                        .attr("x2", coords.x())
+                        .attr("y2", coords.y());
+            }
 
             force.stop();
             return null;
@@ -366,6 +476,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
             if (mousdownNode != null) {
                 // hide drag line
                 dragLine.attr("class", "drag_line_hidden");
+                dragPath.attr("class", "link_triangle_hidden").attr("d", "");
 
                 if (mousupNode == null) {
                     Coords coords = D3.mouseAsCoords(context);
@@ -406,5 +517,22 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
             links.splice(links.indexOf(elementLink), 1);
             return null;
         });
+    }
+
+    private String getTrianglePath(double x, double y) {
+        double dist = Math.sqrt(x * x + y * y);
+
+        return "M0,0 L" +
+                0 + "," + ELEMENT_RADIUS + "," +
+                (dist - ELEMENT_RADIUS) + "," + 0 + "," +
+                dist + "," + 0 + "," +
+                (dist - ELEMENT_RADIUS) + "," + 0 + "," +
+                0 + "," + (-ELEMENT_RADIUS) +
+                "z";
+    }
+
+    private String getTriangleTransform(double sourceX, double sourceY, double x, double y) {
+        double angle = Math.atan2(y, x) / Math.PI * 180;
+        return "translate(" + sourceX + "," + sourceY + ") rotate(" + angle + ")";
     }
 }

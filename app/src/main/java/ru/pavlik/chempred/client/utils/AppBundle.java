@@ -2,11 +2,12 @@ package ru.pavlik.chempred.client.utils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 public interface AppBundle extends ClientBundle {
 
-    public static final AppBundle INSTANCE = GWT.create(AppBundle.class);
+    AppBundle INSTANCE = GWT.create(AppBundle.class);
 
     @Source("images/periodic_table.png")
     ImageResource periodicTable();
@@ -28,5 +29,9 @@ public interface AppBundle extends ClientBundle {
 
     @Source("images/clear.png")
     ImageResource clear();
+
+    @Source("css/element.css")
+    @CssResource.NotStrict
+    CssResource elementsCss();
 
 }

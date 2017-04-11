@@ -39,7 +39,7 @@
                 </g:FlowPanel>
             </g:customCell>
             <g:customCell>
-                <c:DrawPanelWidget ui:field="panel" addStyleNames="{style.main-canvas}"/>
+                <c:DrawPanelWidget ui:field="drawPanel" addStyleNames="{style.main-canvas}"/>
             </g:customCell>
             <g:customCell styleName="{style.right}">
                 <b:VerticalButtonGroup id="menu_right" dataToggle="BUTTONS" addStyleNames="{style.left}">
