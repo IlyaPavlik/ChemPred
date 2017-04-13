@@ -10,54 +10,99 @@
         <g:row>
             <g:cell/>
             <g:customCell styleName="{style.top}">
-                <g:Label>Header</g:Label>
+                <b:InputGroup>
+                    <b:TextBox ui:field="smilesField" placeholder="SMILES" autoComplete="false"/>
+                    <b:InputGroupButton>
+                        <b:Button ui:field="smilesBuild" text="Построить"/>
+                    </b:InputGroupButton>
+                </b:InputGroup>
             </g:customCell>
             <g:cell/>
         </g:row>
         <g:row>
             <g:customCell styleName="{style.left}">
                 <g:FlowPanel>
-                    <b:VerticalButtonGroup ui:field="menuLeft" dataToggle="BUTTONS" addStyleNames="{style.left}">
-                        <b:RadioButton name="elementGroup" text="C" ui:field="elementC"
-                                       addStyleNames="{style.button} {style.button-symbol}"/>
-                        <b:RadioButton name="elementGroup" text="O" ui:field="elementO"
-                                       addStyleNames="{style.button} {style.button-symbol}"/>
-                        <b:RadioButton name="elementGroup" text="P" ui:field="elementP"
-                                       addStyleNames="{style.button} {style.button-symbol}"/>
-                        <b:RadioButton name="elementGroup" text="S" ui:field="elementS"
-                                       addStyleNames="{style.button} {style.button-symbol}"/>
-                        <b:RadioButton name="elementGroup" text="N" ui:field="elementN"
-                                       addStyleNames="{style.button} {style.button-symbol}"/>
-                        <b:RadioButton name="elementGroup" text="Cl" ui:field="elementCl"
-                                       addStyleNames="{style.button} {style.button-symbol}"/>
-                        <c:ImageRadioButton name="elementGroup" ui:field="periodicTable"
-                                            addStyleNames="{style.button} {style.button-table}"
-                                            resource="{resources.periodicTable}"/>
+                    <b:VerticalButtonGroup
+                            dataToggle="BUTTONS"
+                            addStyleNames="{style.left}">
+                        <b:RadioButton
+                                ui:field="elementC"
+                                name="elementGroup"
+                                text="C"
+                                addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton
+                                ui:field="elementO"
+                                name="elementGroup"
+                                text="O"
+                                addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton
+                                ui:field="elementP"
+                                name="elementGroup"
+                                text="P"
+                                addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton
+                                ui:field="elementS"
+                                name="elementGroup"
+                                text="S"
+                                addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton
+                                ui:field="elementN"
+                                name="elementGroup"
+                                text="N"
+                                addStyleNames="{style.button} {style.button-symbol}"/>
+                        <b:RadioButton
+                                ui:field="elementCl"
+                                name="elementGroup"
+                                text="Cl"
+                                addStyleNames="{style.button} {style.button-symbol}"/>
+                        <c:ImageRadioButton
+                                ui:field="periodicTable"
+                                name="elementGroup"
+                                addStyleNames="{style.button} {style.button-table}"
+                                resource="{resources.periodicTable}"/>
                     </b:VerticalButtonGroup>
-                    <c:ImageButton ui:field="clear" resource="{resources.clear}"
-                                   addStyleNames="{style.button}  {style.button-clear}"/>
+
+                    <c:ImageButton
+                            ui:field="clear"
+                            resource="{resources.clear}"
+                            addStyleNames="{style.button}  {style.button-clear}"/>
                 </g:FlowPanel>
             </g:customCell>
             <g:customCell>
-                <c:DrawPanelWidget ui:field="drawPanel" addStyleNames="{style.main-canvas}"/>
+                <c:DrawPanelWidget
+                        ui:field="drawPanel"
+                        addStyleNames="{style.main-canvas}"/>
             </g:customCell>
             <g:customCell styleName="{style.right}">
-                <b:VerticalButtonGroup id="menu_right" dataToggle="BUTTONS" addStyleNames="{style.left}">
-                    <c:ImageRadioButton name="linkGroup" ui:field="linkOne" active="true"
-                                        addStyleNames="{style.button} {style.button-line}"
-                                        resource="{resources.singleLine}"/>
-                    <c:ImageRadioButton name="linkGroup" ui:field="linkTwo"
-                                        addStyleNames="{style.button} {style.button-line}"
-                                        resource="{resources.doubleLine}"/>
-                    <c:ImageRadioButton name="linkGroup" ui:field="linkThree"
-                                        addStyleNames="{style.button} {style.button-line}"
-                                        resource="{resources.tripleLine}"/>
-                    <c:ImageRadioButton name="linkGroup" ui:field="linkTop"
-                                        addStyleNames="{style.button} {style.button-line}"
-                                        resource="{resources.singleUpLineLine}"/>
-                    <c:ImageRadioButton name="linkGroup" ui:field="linkDown"
-                                        addStyleNames="{style.button} {style.button-line}"
-                                        resource="{resources.singleDownLineLine}"/>
+                <b:VerticalButtonGroup
+                        dataToggle="BUTTONS"
+                        addStyleNames="{style.left}">
+                    <c:ImageRadioButton
+                            ui:field="linkOne"
+                            name="linkGroup"
+                            active="true"
+                            addStyleNames="{style.button} {style.button-line}"
+                            resource="{resources.singleLine}"/>
+                    <c:ImageRadioButton
+                            ui:field="linkTwo"
+                            name="linkGroup"
+                            addStyleNames="{style.button} {style.button-line}"
+                            resource="{resources.doubleLine}"/>
+                    <c:ImageRadioButton
+                            ui:field="linkThree"
+                            name="linkGroup"
+                            addStyleNames="{style.button} {style.button-line}"
+                            resource="{resources.tripleLine}"/>
+                    <c:ImageRadioButton
+                            ui:field="linkTop"
+                            name="linkGroup"
+                            addStyleNames="{style.button} {style.button-line}"
+                            resource="{resources.singleUpLineLine}"/>
+                    <c:ImageRadioButton
+                            ui:field="linkDown"
+                            name="linkGroup"
+                            addStyleNames="{style.button} {style.button-line}"
+                            resource="{resources.singleDownLineLine}"/>
                 </b:VerticalButtonGroup>
             </g:customCell>
         </g:row>

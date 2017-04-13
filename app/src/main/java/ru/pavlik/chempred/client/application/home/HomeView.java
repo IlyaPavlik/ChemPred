@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import org.gwtbootstrap3.client.ui.TextBox;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.converter.ElementConverter;
 import ru.pavlik.chempred.client.model.converter.StructureConverter;
@@ -21,6 +22,8 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
 
     @UiField
     DrawPanelWidget drawPanel;
+    @UiField
+    TextBox smilesField;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
@@ -127,5 +130,10 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     @UiHandler("train")
     public void onTrainClick(ClickEvent clickEvent) {
         getUiHandlers().handleTrainClick();
+    }
+
+    @UiHandler("smilesBuild")
+    public void onBuildSmilesClick(ClickEvent clickEvent) {
+        getUiHandlers().handleSmilesParse(smilesField.getText());
     }
 }
