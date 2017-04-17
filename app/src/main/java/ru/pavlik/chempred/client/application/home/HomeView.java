@@ -11,10 +11,12 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.converter.ElementConverter;
 import ru.pavlik.chempred.client.model.converter.StructureConverter;
+import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.model.js.Structure;
 import ru.pavlik.chempred.client.widgets.DrawPanelWidget;
+import ru.pavlik.chempred.client.widgets.compoundinfo.CompoundInfoWidget;
 
 import javax.inject.Inject;
 
@@ -24,6 +26,8 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     DrawPanelWidget drawPanel;
     @UiField
     TextBox smilesField;
+    @UiField
+    CompoundInfoWidget compoundInfo;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
@@ -42,6 +46,10 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
 
         Scheduler.get().scheduleDeferred(() ->
                 drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight()));
+        drawPanel.setOnStructureUpdateListener(structure -> {
+            StructureDao structureDao = structureConverter.convertToDao(structure);
+            getUiHandlers().handleUpdateStructure(structureDao);
+        });
     }
 
     @Override
@@ -53,6 +61,13 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     public void setStructure(StructureDao structureDao) {
         Structure structure = structureConverter.convertToNative(structureDao.getElements(), structureDao.getLinks());
         drawPanel.setStructure(structure);
+    }
+
+    @Override
+    public void showCompoundInfo(CompoundDao compoundDao) {
+        compoundInfo.setCompoundName(compoundDao.getName());
+        compoundInfo.setBrutto(compoundDao.getBrutto());
+        compoundInfo.setSmiles(compoundDao.getSmiles());
     }
 
     @UiHandler("elementC")
@@ -118,19 +133,20 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     @UiHandler("clear")
     public void onClearClick(ClickEvent clickEvent) {
         drawPanel.clear();
+        compoundInfo.clear();
     }
 
-    @UiHandler("prediction")
-    public void onPredictionClick(ClickEvent clickEvent) {
-        Structure structure = drawPanel.getStructure();
-        StructureDao structureDao = structureConverter.convertToDao(structure);
-        getUiHandlers().handlePredictionClick(structureDao.getLinks());
-    }
-
-    @UiHandler("train")
-    public void onTrainClick(ClickEvent clickEvent) {
-        getUiHandlers().handleTrainClick();
-    }
+//    @UiHandler("prediction")
+//    public void onPredictionClick(ClickEvent clickEvent) {
+//        Structure structure = drawPanel.getStructure();
+//        StructureDao structureDao = structureConverter.convertToDao(structure);
+//        getUiHandlers().handlePredictionClick(structureDao.getLinks());
+//    }
+//
+//    @UiHandler("train")
+//    public void onTrainClick(ClickEvent clickEvent) {
+//        getUiHandlers().handleTrainClick();
+//    }
 
     @UiHandler("smilesBuild")
     public void onBuildSmilesClick(ClickEvent clickEvent) {

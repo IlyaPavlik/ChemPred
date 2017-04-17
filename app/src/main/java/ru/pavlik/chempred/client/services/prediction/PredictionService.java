@@ -16,7 +16,7 @@ public interface PredictionService extends RemoteService {
 
     double train();
 
-    class App {
+    class Service {
         private static PredictionServiceAsync ourInstance = GWT.create(PredictionService.class);
 
         public static synchronized PredictionServiceAsync getInstance() {

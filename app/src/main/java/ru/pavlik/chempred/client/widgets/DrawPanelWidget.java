@@ -15,8 +15,6 @@ import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.gwtbootstrap3.extras.notify.client.ui.Notify;
-import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.js.ElementLink;
 import ru.pavlik.chempred.client.model.js.ElementNode;
@@ -26,6 +24,10 @@ import ru.pavlik.chempred.client.utils.AppBundle;
 public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
     private static final int ELEMENT_RADIUS = 10;
+
+    public interface OnStructureUpdateListener {
+        void onUpdate(Structure structure);
+    }
 
     private int width;
     private int height;
@@ -51,6 +53,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private PowScale radius;
     private ElementNode currentElement = null;
     private LinkType linkType = LinkType.SINGLE;
+    private OnStructureUpdateListener onStructureUpdateListener;
 
     public DrawPanelWidget() {
         AppBundle.INSTANCE.elementsCss().ensureInjected();
@@ -65,8 +68,14 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
         this.linkType = linkType;
     }
 
+    public void setOnStructureUpdateListener(OnStructureUpdateListener onStructureUpdateListener) {
+        this.onStructureUpdateListener = onStructureUpdateListener;
+    }
+
     public void setStructure(Structure structure) {
         if (force != null) {
+            clear();
+
             Array<ElementLink> linkArray = Array.create();
             for (ElementLink link : structure.getElementLinks()) {
                 linkArray.push(link);
@@ -180,6 +189,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                             nodes.splice(nodes.indexOf(selectedNode), 1);
                             spliceLinksForNodes(selectedNode);
                             redraw();
+                            notifyUpdateStructure();
                             break;
                     }
                     return null;
@@ -294,6 +304,7 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                         selectedLink = elementLink;
                         zoomSelection.call(zoom);
                         redraw();
+                        notifyUpdateStructure();
                     }
                     return null;
                 })
@@ -360,7 +371,11 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
         //Draw single links
         linkSelections.filter((context, d, index) -> {
             ElementLink elementLink = d.<ElementLink>as();
-            return elementLink.getType() == LinkType.SINGLE ? context : null;
+            return elementLink.getType() == LinkType.SINGLE
+                    || elementLink.getType() == LinkType.DOUBLE
+                    || elementLink.getType() == LinkType.TRIPLE
+                    ? context
+                    : null;
         })
                 .append("line")
                 .attr("class", "link")
@@ -491,15 +506,12 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
                     links.push(ElementLink.create(mousdownNode, newNode, linkType));
                 }
                 redraw();
+                notifyUpdateStructure();
             } else if (nodes.length() == 0 && currentElement != null) {
                 Coords coords = D3.mouseAsCoords(context);
                 nodes.push(ElementNode.create(coords.x(), coords.y(), currentElement));
                 redraw();
-            } else if (currentElement == null) {
-                //TODO refactor, move to utils class
-                NotifySettings settings = NotifySettings.newSettings();
-                settings.setDelay(2000);
-                Notify.notify("Выберите химический элемент", settings);
+                notifyUpdateStructure();
             }
             // clear mouse event vars
             resetMouseVars();
@@ -534,5 +546,11 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
     private String getTriangleTransform(double sourceX, double sourceY, double x, double y) {
         double angle = Math.atan2(y, x) / Math.PI * 180;
         return "translate(" + sourceX + "," + sourceY + ") rotate(" + angle + ")";
+    }
+
+    private void notifyUpdateStructure() {
+        if (onStructureUpdateListener != null) {
+            onStructureUpdateListener.onUpdate(getStructure());
+        }
     }
 }

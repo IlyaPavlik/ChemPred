@@ -204,8 +204,8 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
 //        Map<Compound, Map<String, Integer>> compoundDescriptors = new HashMap<>();
 //
 //        for (Compound compound : compounds) {
-//            String smiles = compound.getSmiles();
-//            List<String> smilesDescriptors = getDescriptors(smiles);
+//            String compound = compound.getSmiles();
+//            List<String> smilesDescriptors = getDescriptors(compound);
 //            descriptors.addAll(smilesDescriptors);
 //
 //            Map<String, Integer> countDescriptors = new TreeMap<>();
@@ -234,9 +234,9 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
 //        return compoundDescriptors;
 //    }
 //
-//    public List<String> getDescriptors(String smiles) {
+//    public List<String> getDescriptors(String compound) {
 //        List<String> descriptors = new ArrayList<>();
-//        StructureDao structureDao = SmilesUtils.parseSmiles(daoElements, smiles);
+//        StructureDao structureDao = SmilesUtils.parseSmiles(daoElements, compound);
 //
 //        //correct valence
 //        for (LinkDao linkDao : structureDao.getLinks()) {

@@ -6,7 +6,7 @@
 
     <!-- Servlets -->
     <servlet>
-        <servlet-name>ChemPredServlet</servlet-name>
+        <servlet-name>PredictionService</servlet-name>
         <servlet-class>ru.pavlik.chempred.server.services.PredictionServiceImp</servlet-class>
     </servlet>
     <servlet>
@@ -14,12 +14,12 @@
         <servlet-class>ru.pavlik.chempred.server.services.ElementServiceImpl</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ru.pavlik.chempred.ChemPred SmilesService</servlet-name>
-        <servlet-class>ru.pavlik.chempred.server.services.SmilesServiceImpl</servlet-class>
+        <servlet-name>CompoundService</servlet-name>
+        <servlet-class>ru.pavlik.chempred.server.services.CompoundServiceImpl</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ChemPredServlet</servlet-name>
+        <servlet-name>PredictionService</servlet-name>
         <url-pattern>/ChemPred/prediction</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -27,8 +27,8 @@
         <url-pattern>/ChemPred/element</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ru.pavlik.chempred.ChemPred SmilesService</servlet-name>
-        <url-pattern>/ChemPred/smiles</url-pattern>
+        <servlet-name>CompoundService</servlet-name>
+        <url-pattern>/ChemPred/compound</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serves -->

@@ -9,18 +9,20 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTablePresenter;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTableView;
+import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.model.events.SelectElementEvent;
+import ru.pavlik.chempred.client.model.events.UpdateStructureEvent;
 import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
 import ru.pavlik.chempred.client.place.NameTokens;
+import ru.pavlik.chempred.client.services.compound.CompoundService;
+import ru.pavlik.chempred.client.services.compound.CompoundServiceAsync;
 import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
 import ru.pavlik.chempred.client.services.prediction.PredictionService;
 import ru.pavlik.chempred.client.services.prediction.PredictionServiceAsync;
-import ru.pavlik.chempred.client.services.smiles.SmilesService;
-import ru.pavlik.chempred.client.services.smiles.SmilesServiceAsync;
 import ru.pavlik.chempred.client.utils.Utils;
 
 import javax.inject.Inject;
@@ -29,7 +31,7 @@ import java.util.List;
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy> implements PresenterUiHandler {
 
     private ElementServiceAsync elementService;
-    private SmilesServiceAsync smilesService;
+    private CompoundServiceAsync compoundService;
     private PredictionServiceAsync predictionService;
 
     @Inject
@@ -39,6 +41,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         void setElement(ElementDao element);
 
         void setStructure(StructureDao structure);
+
+        void showCompoundInfo(CompoundDao compoundDao);
     }
 
     @ProxyStandard
@@ -55,11 +59,14 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         getView().setUiHandlers(this);
 
         elementService = ElementService.Service.getInstance();
-        smilesService = SmilesService.Service.getInstance();
-        predictionService = PredictionService.App.getInstance();
+        compoundService = CompoundService.Service.getInstance();
+        predictionService = PredictionService.Service.getInstance();
 
         eventBus.addHandler(SelectElementEvent.TYPE, event -> {
             getView().setElement(event.getElementDao());
+        });
+        eventBus.addHandler(UpdateStructureEvent.TYPE, event -> {
+            loadCompoundInfo(event.getStructureDao());
         });
     }
 
@@ -75,7 +82,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     @Override
     public void handleSmilesParse(String smiles) {
-        smilesService.parseSmiles(smiles, new ErrorHandlerCallback<StructureDao>() {
+        compoundService.parseSmiles(smiles, new ErrorHandlerCallback<StructureDao>() {
             @Override
             public void onSuccess(StructureDao structure) {
                 getView().setStructure(structure);
@@ -106,5 +113,19 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @Override
     public void handlePeriodicTableClick() {
         addToPopupSlot(new PeriodicTablePresenter(getEventBus(), periodicTableView));
+    }
+
+    @Override
+    public void handleUpdateStructure(StructureDao structureDao) {
+        loadCompoundInfo(structureDao);
+    }
+
+    public void loadCompoundInfo(StructureDao structureDao) {
+        compoundService.getCompound(structureDao, new ErrorHandlerCallback<CompoundDao>() {
+            @Override
+            public void onSuccess(CompoundDao result) {
+                getView().showCompoundInfo(result);
+            }
+        });
     }
 }

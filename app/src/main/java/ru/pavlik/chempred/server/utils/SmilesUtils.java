@@ -1,9 +1,14 @@
 package ru.pavlik.chempred.server.utils;
 
+import org.openscience.cdk.exception.CDKException;
+import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.smiles.SmiFlavor;
+import org.openscience.cdk.smiles.SmilesGenerator;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
+import ru.pavlik.chempred.server.model.converter.AtomContainerConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,6 +139,19 @@ public class SmilesUtils {
         return structure;
     }
 
+    public static String parseStructure(StructureDao structureDao) {
+        SmilesGenerator smilesGenerator = new SmilesGenerator(SmiFlavor.Generic);
+        AtomContainerConverter atomContainerConverter = new AtomContainerConverter();
+        IAtomContainer atomContainer = atomContainerConverter.convertToDB(structureDao);
+        try {
+            return smilesGenerator.create(atomContainer);
+        } catch (CDKException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Deprecated
     public static String parseStructure(List<LinkDao> links) {
         String resultSmiles = links.get(0).getElementSource().getSymbol();
 

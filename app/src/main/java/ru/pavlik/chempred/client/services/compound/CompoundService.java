@@ -1,24 +1,27 @@
-package ru.pavlik.chempred.client.services.smiles;
+package ru.pavlik.chempred.client.services.compound;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 
 import java.util.List;
 
-@RemoteServiceRelativePath("smiles")
-public interface SmilesService extends RemoteService {
+@RemoteServiceRelativePath("compound")
+public interface CompoundService extends RemoteService {
 
     StructureDao parseSmiles(String smiles);
 
     String parseStructure(List<LinkDao> links);
 
-    class Service {
-        private static SmilesServiceAsync ourInstance = GWT.create(SmilesService.class);
+    CompoundDao getCompound(StructureDao structureDao);
 
-        public static synchronized SmilesServiceAsync getInstance() {
+    class Service {
+        private static CompoundServiceAsync ourInstance = GWT.create(CompoundService.class);
+
+        public static synchronized CompoundServiceAsync getInstance() {
             return ourInstance;
         }
     }
