@@ -116,7 +116,7 @@
                         <cm:CompoundInfoWidget ui:field="compoundInfo" addStyleNames="{style.block-info}"/>
                     </g:cell>
                     <g:cell width="50%">
-                        <pr:PredictionWidget addStyleNames="{style.block-info}"/>
+                        <pr:PredictionWidget ui:field="predictionInfo" addStyleNames="{style.block-info}"/>
                     </g:cell>
                 </g:HorizontalPanel>
             </g:customCell>

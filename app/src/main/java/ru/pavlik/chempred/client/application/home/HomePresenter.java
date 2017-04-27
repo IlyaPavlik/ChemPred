@@ -43,6 +43,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         void setStructure(StructureDao structure);
 
         void showCompoundInfo(CompoundDao compoundDao);
+
+        void showPredictionData(double lowRatio);
     }
 
     @ProxyStandard
@@ -105,7 +107,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         predictionService.predict(links, new ErrorHandlerCallback<Double>() {
             @Override
             public void onSuccess(Double result) {
-                Utils.console(result);
+                getView().showPredictionData(result);
             }
         });
     }

@@ -179,21 +179,21 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         return data;
     }
 
-    public static void main(String[] args) {
-        PredictionServiceImp serviceImp = new PredictionServiceImp();
-        serviceImp.train();
-
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Query query = session.createQuery("from Compound");
-        List<Compound> compounds = query.list();
-        session.getTransaction().commit();
-
-        for (Compound compound : compounds) {
-            double output = serviceImp.predict(compound.getSmiles());
-            System.out.println("!!" + compound.getName() + " : " + output);
-        }
-    }
+//    public static void main(String[] args) {
+//        PredictionServiceImp serviceImp = new PredictionServiceImp();
+//        serviceImp.train();
+//
+//        Session session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//        Query query = session.createQuery("from Compound");
+//        List<Compound> compounds = query.list();
+//        session.getTransaction().commit();
+//
+//        for (Compound compound : compounds) {
+//            double output = serviceImp.predict(compound.getSmiles());
+//            System.out.println("!!" + compound.getName() + " : " + output);
+//        }
+//    }
 
 //    public Map<Compound, Map<String, Integer>> getCompoundDescriptors(Set<String> descriptors) {
 //        Session session = HibernateUtil.getSessionFactory().openSession();

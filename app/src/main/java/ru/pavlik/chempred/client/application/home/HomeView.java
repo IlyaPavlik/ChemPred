@@ -2,6 +2,7 @@ package ru.pavlik.chempred.client.application.home;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -17,6 +18,7 @@ import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.model.js.Structure;
 import ru.pavlik.chempred.client.widgets.DrawPanelWidget;
 import ru.pavlik.chempred.client.widgets.compoundinfo.CompoundInfoWidget;
+import ru.pavlik.chempred.client.widgets.prediction.PredictionWidget;
 
 import javax.inject.Inject;
 
@@ -28,6 +30,8 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     TextBox smilesField;
     @UiField
     CompoundInfoWidget compoundInfo;
+    @UiField
+    PredictionWidget predictionInfo;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
@@ -50,6 +54,11 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
             StructureDao structureDao = structureConverter.convertToDao(structure);
             getUiHandlers().handleUpdateStructure(structureDao);
         });
+        predictionInfo.setOnPredictClickListener(() -> {
+            Structure structure = drawPanel.getStructure();
+            StructureDao structureDao = structureConverter.convertToDao(structure);
+            getUiHandlers().handlePredictionClick(structureDao.getLinks());
+        });
     }
 
     @Override
@@ -68,6 +77,12 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
         compoundInfo.setCompoundName(compoundDao.getName());
         compoundInfo.setBrutto(compoundDao.getBrutto());
         compoundInfo.setSmiles(compoundDao.getSmiles());
+    }
+
+    @Override
+    public void showPredictionData(double lowRatio) {
+        NumberFormat numberFormat = NumberFormat.getFormat("#.##");
+        predictionInfo.setLowRatio(numberFormat.format(lowRatio));
     }
 
     @UiHandler("elementC")
@@ -134,19 +149,8 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     public void onClearClick(ClickEvent clickEvent) {
         drawPanel.clear();
         compoundInfo.clear();
+        predictionInfo.clear();
     }
-
-//    @UiHandler("prediction")
-//    public void onPredictionClick(ClickEvent clickEvent) {
-//        Structure structure = drawPanel.getStructure();
-//        StructureDao structureDao = structureConverter.convertToDao(structure);
-//        getUiHandlers().handlePredictionClick(structureDao.getLinks());
-//    }
-//
-//    @UiHandler("train")
-//    public void onTrainClick(ClickEvent clickEvent) {
-//        getUiHandlers().handleTrainClick();
-//    }
 
     @UiHandler("smilesBuild")
     public void onBuildSmilesClick(ClickEvent clickEvent) {
