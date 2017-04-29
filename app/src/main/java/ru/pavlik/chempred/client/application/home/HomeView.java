@@ -156,4 +156,9 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     public void onBuildSmilesClick(ClickEvent clickEvent) {
         getUiHandlers().handleSmilesParse(smilesField.getText());
     }
+
+    @UiHandler("compounds")
+    public void onCompoundsClick(ClickEvent clickEvent) {
+        getUiHandlers().handleCompoundsClick();
+    }
 }

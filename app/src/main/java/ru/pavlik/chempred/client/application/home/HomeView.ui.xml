@@ -12,12 +12,35 @@
         <g:row>
             <g:cell/>
             <g:customCell styleName="{style.top}">
-                <b:InputGroup>
-                    <b:TextBox ui:field="smilesField" placeholder="SMILES" autoComplete="false"/>
-                    <b:InputGroupButton>
-                        <b:Button ui:field="smilesBuild" text="Построить"/>
-                    </b:InputGroupButton>
-                </b:InputGroup>
+                <b:Navbar>
+                    <b:NavbarHeader>
+                        <b:NavbarBrand>Меню</b:NavbarBrand>
+                        <b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
+                    </b:NavbarHeader>
+
+                    <b:NavbarCollapse>
+                        <b:NavbarNav>
+                            <b:ListDropDown>
+                                <b:AnchorButton dataToggle="DROPDOWN">Файл</b:AnchorButton>
+                                <b:DropDownMenu>
+                                    <b:AnchorListItem>Экспортировать...</b:AnchorListItem>
+                                </b:DropDownMenu>
+                            </b:ListDropDown>
+
+                            <b:AnchorListItem ui:field="compounds">Соединения</b:AnchorListItem>
+                            <b:AnchorListItem>Обучение</b:AnchorListItem>
+                        </b:NavbarNav>
+
+                        <b:NavbarForm pull="LEFT">
+                            <b:InputGroup>
+                                <b:TextBox ui:field="smilesField" placeholder="SMILES" autoComplete="false"/>
+                                <b:InputGroupButton>
+                                    <b:Button ui:field="smilesBuild" text="Построить"/>
+                                </b:InputGroupButton>
+                            </b:InputGroup>
+                        </b:NavbarForm>
+                    </b:NavbarCollapse>
+                </b:Navbar>
             </g:customCell>
             <g:cell/>
         </g:row>

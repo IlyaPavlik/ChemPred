@@ -1,6 +1,9 @@
 package ru.pavlik.chempred.client.application.periodictable;
 
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -37,6 +40,8 @@ public class PeriodicTableView extends PopupViewWithUiHandlers<PresenterUiHandle
     @UiField
     Style style;
 
+    private HandlerRegistration keyHandler;
+
     interface Binder extends UiBinder<PopupPanel, PeriodicTableView> {
     }
 
@@ -52,7 +57,18 @@ public class PeriodicTableView extends PopupViewWithUiHandlers<PresenterUiHandle
 
     @Override
     protected void onAttach() {
+        keyHandler = asWidget().getParent().addDomHandler(event -> {
+            if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
+                hide();
+            }
+        }, KeyDownEvent.getType());
+
         getUiHandlers().loadElements();
+    }
+
+    @Override
+    protected void onDetach() {
+        keyHandler.removeHandler();
     }
 
     @Override

@@ -13,4 +13,8 @@ public interface CompoundServiceAsync {
     void parseSmiles(String smiles, AsyncCallback<StructureDao> async);
 
     void getCompound(StructureDao structureDao, AsyncCallback<CompoundDao> async);
+
+    void getCompounds(AsyncCallback<List<CompoundDao>> async);
+
+    void findCompounds(String query, AsyncCallback<List<CompoundDao>> async);
 }

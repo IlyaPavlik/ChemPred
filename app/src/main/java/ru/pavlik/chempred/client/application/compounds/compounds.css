@@ -1,0 +1,49 @@
+.popup {
+    width: 50%;
+    z-index: 20;
+}
+
+.popup_background {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.panel {
+    padding: 10px;
+}
+
+.list_panel {
+    height: 500px;
+    max-height: 500px;
+}
+
+.list_group {
+    overflow-y: auto;
+    margin-right: 5px;
+    height: 90%;
+    width: 100%;
+}
+
+.info_panel {
+    height: 500px;
+    text-align: left;
+    margin-left: 5px;
+    padding: 10px;
+}
+
+.search {
+    margin-bottom: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 4px; /* for vertical scrollbars */
+    height: 12px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+}

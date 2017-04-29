@@ -18,6 +18,10 @@ public interface CompoundService extends RemoteService {
 
     CompoundDao getCompound(StructureDao structureDao);
 
+    List<CompoundDao> getCompounds();
+
+    List<CompoundDao> findCompounds(String query);
+
     class Service {
         private static CompoundServiceAsync ourInstance = GWT.create(CompoundService.class);
 

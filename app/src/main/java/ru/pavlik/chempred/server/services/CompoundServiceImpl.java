@@ -16,6 +16,7 @@ import ru.pavlik.chempred.client.services.compound.CompoundService;
 import ru.pavlik.chempred.server.model.Compound;
 import ru.pavlik.chempred.server.model.Element;
 import ru.pavlik.chempred.server.model.converter.AtomContainerConverter;
+import ru.pavlik.chempred.server.model.converter.CompoundConverter;
 import ru.pavlik.chempred.server.model.converter.ElementConverter;
 import ru.pavlik.chempred.server.utils.HibernateUtil;
 import ru.pavlik.chempred.server.utils.SmilesUtils;
@@ -26,6 +27,7 @@ import java.util.List;
 public class CompoundServiceImpl extends RemoteServiceServlet implements CompoundService {
 
     private ElementConverter elementConverter = new ElementConverter();
+    private CompoundConverter compoundConverter = new CompoundConverter();
     private AtomContainerConverter atomContainerConverter = new AtomContainerConverter();
 
     @Override
@@ -59,6 +61,7 @@ public class CompoundServiceImpl extends RemoteServiceServlet implements Compoun
         query.setParameter("smiles", smiles);
 
         List compounds = query.list();
+        session.getTransaction().commit();
 
         if (!compounds.isEmpty()) {
             Compound compound = (Compound) compounds.get(0);
@@ -70,10 +73,48 @@ public class CompoundServiceImpl extends RemoteServiceServlet implements Compoun
         MolecularFormula molecularFormula = new MolecularFormula();
         for (IAtom atom : atomContainer.atoms()) {
             molecularFormula.addIsotope(atom);
-            molecularFormula.addIsotope(new Atom("H"), atom.getImplicitHydrogenCount());
+            Integer hydrogenCount = atom.getImplicitHydrogenCount();
+            if (hydrogenCount > 0) {
+                molecularFormula.addIsotope(new Atom("H"), hydrogenCount);
+            }
         }
         compoundDao.setBrutto(MolecularFormulaManipulator.getString(molecularFormula));
 
         return compoundDao;
+    }
+
+    @Override
+    public List<CompoundDao> getCompounds() {
+        List<CompoundDao> compoundDaoList = new ArrayList<>();
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Compound");
+
+        List<Compound> compounds = query.list();
+        session.getTransaction().commit();
+        for (Compound compound : compounds) {
+            compoundDaoList.add(compoundConverter.convertToDao(compound));
+        }
+
+        return compoundDaoList;
+    }
+
+    @Override
+    public List<CompoundDao> findCompounds(String searchQuery) {
+        List<CompoundDao> compoundDaoList = new ArrayList<>();
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.createQuery("from Compound where name LIKE :query");
+        query.setParameter("query", "%" + searchQuery + "%");
+
+        List<Compound> compounds = query.list();
+        session.getTransaction().commit();
+        for (Compound compound : compounds) {
+            compoundDaoList.add(compoundConverter.convertToDao(compound));
+        }
+
+        return compoundDaoList;
     }
 }

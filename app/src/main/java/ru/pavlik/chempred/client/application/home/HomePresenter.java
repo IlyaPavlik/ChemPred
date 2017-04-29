@@ -7,12 +7,15 @@ import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import ru.pavlik.chempred.client.application.compounds.CompoundsPresenter;
+import ru.pavlik.chempred.client.application.compounds.CompoundsView;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTablePresenter;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTableView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
+import ru.pavlik.chempred.client.model.events.BuildCompoundEvent;
 import ru.pavlik.chempred.client.model.events.SelectElementEvent;
 import ru.pavlik.chempred.client.model.events.UpdateStructureEvent;
 import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
@@ -36,6 +39,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
     @Inject
     PeriodicTableView periodicTableView;
+    @Inject
+    CompoundsView compoundsView;
 
     interface MyView extends View, HasUiHandlers<PresenterUiHandler> {
         void setElement(ElementDao element);
@@ -64,12 +69,12 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
         compoundService = CompoundService.Service.getInstance();
         predictionService = PredictionService.Service.getInstance();
 
-        eventBus.addHandler(SelectElementEvent.TYPE, event -> {
-            getView().setElement(event.getElementDao());
-        });
-        eventBus.addHandler(UpdateStructureEvent.TYPE, event -> {
-            loadCompoundInfo(event.getStructureDao());
-        });
+        eventBus.addHandler(SelectElementEvent.TYPE,
+                event -> getView().setElement(event.getElementDao()));
+        eventBus.addHandler(UpdateStructureEvent.TYPE,
+                event -> loadCompoundInfo(event.getStructureDao()));
+        eventBus.addHandler(BuildCompoundEvent.TYPE,
+                event -> handleSmilesParse(event.getCompoundDao().getSmiles()));
     }
 
     @Override
@@ -120,6 +125,11 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @Override
     public void handleUpdateStructure(StructureDao structureDao) {
         loadCompoundInfo(structureDao);
+    }
+
+    @Override
+    public void handleCompoundsClick() {
+        addToPopupSlot(new CompoundsPresenter(getEventBus(), compoundsView));
     }
 
     public void loadCompoundInfo(StructureDao structureDao) {
