@@ -3,6 +3,7 @@ package ru.pavlik.chempred.client.services.prediction;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface PredictionService extends RemoteService {
     double predict(String smiles);
 
     double train();
+
+    double train(List<CompoundDao> compounds);
 
     class Service {
         private static PredictionServiceAsync ourInstance = GWT.create(PredictionService.class);

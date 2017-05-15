@@ -53,6 +53,7 @@ public class AtomContainerConverter extends BaseConverter<StructureDao, IAtomCon
             atomContainer.addBond(bond);
         }
 
+        //configure valence of atoms
         CDKAtomTypeMatcher atomTypeMatcher = CDKAtomTypeMatcher.getInstance(atomContainer.getBuilder());
         for (IAtom atom : atomContainer.atoms()) {
             try {
@@ -63,6 +64,7 @@ public class AtomContainerConverter extends BaseConverter<StructureDao, IAtomCon
             }
         }
 
+        //add hydrogen to atoms
         try {
             CDKHydrogenAdder.getInstance(atomContainer.getBuilder()).addImplicitHydrogens(atomContainer);
         } catch (CDKException e) {

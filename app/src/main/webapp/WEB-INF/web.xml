@@ -17,6 +17,10 @@
         <servlet-name>CompoundService</servlet-name>
         <servlet-class>ru.pavlik.chempred.server.services.CompoundServiceImpl</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ru.pavlik.chempred.ChemPred DescriptorService</servlet-name>
+        <servlet-class>ru.pavlik.chempred.server.services.DescriptorServiceImpl</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>PredictionService</servlet-name>
@@ -29,6 +33,10 @@
     <servlet-mapping>
         <servlet-name>CompoundService</servlet-name>
         <url-pattern>/ChemPred/compound</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ru.pavlik.chempred.ChemPred DescriptorService</servlet-name>
+        <url-pattern>/ChemPred/descriptor</url-pattern>
     </servlet-mapping>
 
     <!-- Default page to serves -->

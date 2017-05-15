@@ -28,7 +28,7 @@
                             </b:ListDropDown>
 
                             <b:AnchorListItem ui:field="compounds">Соединения</b:AnchorListItem>
-                            <b:AnchorListItem>Обучение</b:AnchorListItem>
+                            <b:AnchorListItem ui:field="train">Обучение</b:AnchorListItem>
                         </b:NavbarNav>
 
                         <b:NavbarForm pull="LEFT">

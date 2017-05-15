@@ -8,6 +8,7 @@ public class CompoundDao implements Serializable {
     private String name;
     private String brutto;
     private String smiles;
+    private double lowFactor;
 
     public int getId() {
         return id;
@@ -39,5 +40,13 @@ public class CompoundDao implements Serializable {
 
     public void setSmiles(String smiles) {
         this.smiles = smiles;
+    }
+
+    public double getLowFactor() {
+        return lowFactor;
+    }
+
+    public void setLowFactor(double lowFactor) {
+        this.lowFactor = lowFactor;
     }
 }

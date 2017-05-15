@@ -1,0 +1,47 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:b='urn:import:org.gwtbootstrap3.client.ui'>
+
+    <ui:style src="train.css"/>
+
+    <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true" addStyleNames="{style.popup}"
+                  glassEnabled="true" glassStyleName="{style.popup_background}">
+        <b:Panel addStyleNames="{style.panel}">
+            <g:HorizontalPanel>
+                <g:cell width="25%">
+                    <b:Panel addStyleNames="{style.list_panel}">
+                        <b:TextBox placeholder="Название химического соединения" addStyleNames="{style.search}"
+                                   ui:field="search"/>
+                        <b:ListBox multipleSelect="true" ui:field="listBox" addStyleNames="{style.list_group}"/>
+                    </b:Panel>
+                </g:cell>
+                <g:cell width="75%">
+                    <b:Panel addStyleNames="{style.info_panel}">
+                        <b:Heading size="H3" text="Выберите химическое соединение" alignment="CENTER" color="#cccccc"
+                                   ui:field="placeholder" visible="false"/>
+
+                        <b:NavTabs ui:field="navTabs"/>
+                        <b:TabContent ui:field="tabContent" height="100%" width="100%"/>
+                    </b:Panel>
+                </g:cell>
+            </g:HorizontalPanel>
+
+            <g:HorizontalPanel>
+                <g:cell width="25%">
+                    <b:Panel width="100%" ui:field="addAll" addStyleNames="btn btn-default {style.add_all}">
+                        <b:Icon type="CHEVRON_RIGHT"/>
+                        <b:Icon type="CHEVRON_RIGHT"/>
+                    </b:Panel>
+                </g:cell>
+                <g:cell width="75%">
+                    <g:FlowPanel addStyleNames="{style.bottom_panel}">
+                        <b:Button icon="REMOVE" ui:field="remove"/>
+
+                        <b:Button ui:field="train" text="Обучить" dataLoadingText="Обучение..."
+                                  addStyleNames="{style.train}"/>
+                    </g:FlowPanel>
+                </g:cell>
+            </g:HorizontalPanel>
+        </b:Panel>
+    </g:PopupPanel>
+</ui:UiBinder>

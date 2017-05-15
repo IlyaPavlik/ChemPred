@@ -11,6 +11,8 @@ import ru.pavlik.chempred.client.application.compounds.CompoundsPresenter;
 import ru.pavlik.chempred.client.application.compounds.CompoundsView;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTablePresenter;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTableView;
+import ru.pavlik.chempred.client.application.train.TrainPresenter;
+import ru.pavlik.chempred.client.application.train.TrainView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
@@ -26,7 +28,6 @@ import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
 import ru.pavlik.chempred.client.services.prediction.PredictionService;
 import ru.pavlik.chempred.client.services.prediction.PredictionServiceAsync;
-import ru.pavlik.chempred.client.utils.Utils;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -41,6 +42,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     PeriodicTableView periodicTableView;
     @Inject
     CompoundsView compoundsView;
+    @Inject
+    TrainView trainView;
 
     interface MyView extends View, HasUiHandlers<PresenterUiHandler> {
         void setElement(ElementDao element);
@@ -98,16 +101,6 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     }
 
     @Override
-    public void handleTrainClick() {
-        predictionService.train(new ErrorHandlerCallback<Double>() {
-            @Override
-            public void onSuccess(Double result) {
-                Utils.console("Total error: " + result);
-            }
-        });
-    }
-
-    @Override
     public void handlePredictionClick(List<LinkDao> links) {
         predictionService.predict(links, new ErrorHandlerCallback<Double>() {
             @Override
@@ -130,6 +123,11 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @Override
     public void handleCompoundsClick() {
         addToPopupSlot(new CompoundsPresenter(getEventBus(), compoundsView));
+    }
+
+    @Override
+    public void handleTrainClick() {
+        addToPopupSlot(new TrainPresenter(getEventBus(), trainView));
     }
 
     public void loadCompoundInfo(StructureDao structureDao) {
