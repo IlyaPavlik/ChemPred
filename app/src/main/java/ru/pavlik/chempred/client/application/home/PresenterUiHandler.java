@@ -20,4 +20,6 @@ interface PresenterUiHandler extends UiHandlers {
     void handleUpdateStructure(StructureDao structureDao);
 
     void handleCompoundsClick();
+
+    void handleReportClick();
 }

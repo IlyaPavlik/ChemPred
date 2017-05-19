@@ -18,10 +18,12 @@ import org.openscience.cdk.silent.SilentChemObjectBuilder;
 import org.openscience.cdk.smiles.SmilesParser;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
+import ru.pavlik.chempred.client.model.dao.NeuralNetworkParamDao;
 import ru.pavlik.chempred.client.services.prediction.PredictionService;
 import ru.pavlik.chempred.server.model.Compound;
 import ru.pavlik.chempred.server.model.Descriptor;
 import ru.pavlik.chempred.server.model.NeuralNetworkModel;
+import ru.pavlik.chempred.server.model.converter.CompoundConverter;
 import ru.pavlik.chempred.server.utils.DescriptorUtils;
 import ru.pavlik.chempred.server.utils.HibernateUtil;
 import ru.pavlik.chempred.server.utils.SmilesUtils;
@@ -166,14 +168,56 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         }
         neuralNetwork.learn(dataSet);
 
+        double totalError = ((LMS) neuralNetwork.getLearningRule()).getTotalNetworkError();
         NeuralNetworkModel networkModel = new NeuralNetworkModel();
         networkModel.setNeuralNetwork(neuralNetwork);
         networkModel.setMinOutputValue(min);
         networkModel.setMaxOutputValue(max);
+        networkModel.setTotalError(totalError);
         session.saveOrUpdate(networkModel);
         session.getTransaction().commit();
 
-        return ((LMS) neuralNetwork.getLearningRule()).getTotalNetworkError();
+        return totalError;
+    }
+
+    public static void main(String[] args) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        CompoundConverter compoundConverter = new CompoundConverter();
+        List<CompoundDao> compoundDaos = new ArrayList<>();
+        Query query = session.createQuery("from Compound");
+        List<Compound> compounds = query.list();
+        session.getTransaction().commit();
+
+        for (Compound compound : compounds) {
+            compoundDaos.add(compoundConverter.convertToDao(compound));
+        }
+
+        PredictionServiceImp serviceImp = new PredictionServiceImp();
+        serviceImp.train(compoundDaos);
+    }
+
+    @Override
+    public NeuralNetworkParamDao loadNeuralNetworkParams() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel");
+        NeuralNetworkModel networkModel = (NeuralNetworkModel) neuralNetworkQuery.list().get(0);
+        session.getTransaction().commit();
+        NeuralNetwork neuralNetwork = networkModel.getNeuralNetwork();
+        neuralNetwork.calculate();
+
+        NeuralNetworkParamDao neuralNetworkParam = new NeuralNetworkParamDao();
+        neuralNetworkParam.setActivationFunction(neuralNetwork.getLabel());
+        neuralNetworkParam.setInputSize(neuralNetwork.getInputsCount());
+        neuralNetworkParam.setOutputSize(neuralNetwork.getOutputsCount());
+        neuralNetworkParam.setIterations(LEARN_ITERATION);
+        neuralNetworkParam.setMaxError(LEARN_MAX_ERROR);
+        neuralNetworkParam.setRate(LEARN_RATE);
+        neuralNetworkParam.setTotalError(networkModel.getTotalError());
+
+        return neuralNetworkParam;
     }
 
     @Override
@@ -202,12 +246,45 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
 
         CompoundDao compound = new CompoundDao();
         compound.setSmiles(smiles);
+        double[] inputs = buildInput(compound);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel");
+        NeuralNetworkModel networkModel = (NeuralNetworkModel) neuralNetworkQuery.list().get(0);
+        session.getTransaction().commit();
 
+        networkModel.getNeuralNetwork().setInput(inputs);
+        networkModel.getNeuralNetwork().calculate();
+        double[] outputs = networkModel.getNeuralNetwork().getOutput();
+        outputs = unnormalizeData(outputs, networkModel.getMinOutputValue(), networkModel.getMaxOutputValue());
+
+        return outputs[0];
+    }
+
+    @Override
+    public List<CompoundDao> predictCompounds(List<CompoundDao> compounds) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel");
+        NeuralNetworkModel networkModel = (NeuralNetworkModel) neuralNetworkQuery.list().get(0);
+        session.getTransaction().commit();
+
+        for (CompoundDao compound : compounds) {
+            double[] inputs = buildInput(compound);
+            networkModel.getNeuralNetwork().setInput(inputs);
+            networkModel.getNeuralNetwork().calculate();
+            double[] outputs = networkModel.getNeuralNetwork().getOutput();
+            outputs = unnormalizeData(outputs, networkModel.getMinOutputValue(), networkModel.getMaxOutputValue());
+            compound.setLowFactorPrediction(outputs[0]);
+        }
+        return compounds;
+    }
+
+    private double[] buildInput(CompoundDao compound) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
         Query descriptorsQuery = session.createQuery("from Descriptor");
-
         List<Descriptor> sourceDescriptors = descriptorsQuery.list();
         double[] inputs = new double[sourceDescriptors.size()];
 
@@ -228,19 +305,8 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         for (int j = 0; j < values.size(); j++) {
             inputs[j] = values.get(j);
         }
-
-        inputs = normalizeData(inputs);
-
-        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel");
-        NeuralNetworkModel networkModel = (NeuralNetworkModel) neuralNetworkQuery.list().get(0);
         session.getTransaction().commit();
-
-        networkModel.getNeuralNetwork().setInput(inputs);
-        networkModel.getNeuralNetwork().calculate();
-        double[] outputs = networkModel.getNeuralNetwork().getOutput();
-        outputs = unnormalizeData(outputs, networkModel.getMinOutputValue(), networkModel.getMaxOutputValue());
-
-        return outputs[0];
+        return normalizeData(inputs);
     }
 
     private double[][] normalizeData(double[][] data) {
@@ -286,6 +352,7 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         ((LMS) neuralNetwork.getLearningRule()).setMaxError(LEARN_MAX_ERROR);
         ((LMS) neuralNetwork.getLearningRule()).setLearningRate(LEARN_RATE);
         ((LMS) neuralNetwork.getLearningRule()).setMaxIterations(LEARN_ITERATION);
+        neuralNetwork.setLabel(TransferFunctionType.SIGMOID.getTypeLabel());
         return neuralNetwork;
     }
 }

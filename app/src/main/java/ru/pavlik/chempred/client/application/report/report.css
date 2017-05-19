@@ -1,0 +1,50 @@
+.popup {
+    width: 60%;
+    z-index: 20;
+}
+
+.popup_background {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.panel {
+    padding: 10px;
+    height: 500px;
+}
+
+.left_panel {
+    overflow: auto;
+    margin-right: 5px;
+    height: 100%;
+}
+
+.right_top_panel {
+    margin-left: 5px;
+    height: 100%;
+    margin-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+}
+
+.right_top_panel h4 {
+    text-align: center;
+}
+
+.panel_row {
+    padding: 5px;
+}
+
+.right_bottom_panel {
+    margin-left: 5px;
+    height: 100%;
+    margin-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+}
+
+table th {
+    text-align: center;
+}

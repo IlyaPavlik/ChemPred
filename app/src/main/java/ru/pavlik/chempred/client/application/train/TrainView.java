@@ -4,8 +4,6 @@ import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -18,16 +16,16 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
+import ru.pavlik.chempred.client.application.base.BasePopupView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.DescriptorType;
 
 import javax.inject.Inject;
 import java.util.*;
 
-public class TrainView extends PopupViewWithUiHandlers<TrainUiHandler> implements TrainPresenter.MyView {
+public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPresenter.MyView {
 
     static final String COLUMN_CHECK = "check";
     static final String COLUMN_NAME = "Наименование";
@@ -51,7 +49,6 @@ public class TrainView extends PopupViewWithUiHandlers<TrainUiHandler> implement
     @UiField
     TabContent tabContent;
 
-    private HandlerRegistration keyHandler;
     private Map<DescriptorType, ListDataProvider> listProviders;
     private List<CompoundDao> sourceCompounds;
     private List<CompoundDao> selectedCompounds;
@@ -72,12 +69,7 @@ public class TrainView extends PopupViewWithUiHandlers<TrainUiHandler> implement
 
     @Override
     protected void onAttach() {
-        keyHandler = asWidget().getParent().addDomHandler(event -> {
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-                hide();
-            }
-        }, KeyDownEvent.getType());
-
+        super.onAttach();
         search.addKeyUpHandler(event -> getUiHandlers().searchCompound(search.getValue()));
 
         if (addAllHandler != null) {
@@ -95,7 +87,7 @@ public class TrainView extends PopupViewWithUiHandlers<TrainUiHandler> implement
 
     @Override
     protected void onDetach() {
-        keyHandler.removeHandler();
+        super.onDetach();
         tabContent.clear();
         navTabs.clear();
     }

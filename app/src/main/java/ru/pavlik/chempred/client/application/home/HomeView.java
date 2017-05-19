@@ -166,4 +166,9 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     public void onTrainClick(ClickEvent clickEvent) {
         getUiHandlers().handleTrainClick();
     }
+
+    @UiHandler("report")
+    public void onReportClick(ClickEvent clickEvent) {
+        getUiHandlers().handleReportClick();
+    }
 }

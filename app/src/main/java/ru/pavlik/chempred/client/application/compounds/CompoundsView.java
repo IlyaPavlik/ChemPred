@@ -1,21 +1,18 @@
 package ru.pavlik.chempred.client.application.compounds;
 
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
 import org.gwtbootstrap3.client.ui.*;
+import ru.pavlik.chempred.client.application.base.BasePopupView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class CompoundsView extends PopupViewWithUiHandlers<CompoundsUiHandler> implements CompoundsPresenter.MyView {
+public class CompoundsView extends BasePopupView<CompoundsUiHandler> implements CompoundsPresenter.MyView {
 
     @UiField
     LinkedGroup linkedGroup;
@@ -36,8 +33,6 @@ public class CompoundsView extends PopupViewWithUiHandlers<CompoundsUiHandler> i
     @UiField
     TextBox search;
 
-    private HandlerRegistration keyHandler;
-
     interface Binder extends UiBinder<PopupPanel, CompoundsView> {
     }
 
@@ -49,20 +44,14 @@ public class CompoundsView extends PopupViewWithUiHandlers<CompoundsUiHandler> i
 
     @Override
     protected void onAttach() {
-        keyHandler = asWidget().getParent().addDomHandler(event -> {
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-                hide();
-            }
-        }, KeyDownEvent.getType());
-
+        super.onAttach();
         search.addKeyUpHandler(event -> getUiHandlers().searchCompound(search.getValue()));
-
         getUiHandlers().loadCompounds();
     }
 
     @Override
     protected void onDetach() {
-        keyHandler.removeHandler();
+        super.onDetach();
         visiblePlaceholder(true);
         search.setText("");
     }

@@ -11,6 +11,8 @@ import ru.pavlik.chempred.client.application.compounds.CompoundsPresenter;
 import ru.pavlik.chempred.client.application.compounds.CompoundsView;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTablePresenter;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTableView;
+import ru.pavlik.chempred.client.application.report.ReportPresenter;
+import ru.pavlik.chempred.client.application.report.ReportView;
 import ru.pavlik.chempred.client.application.train.TrainPresenter;
 import ru.pavlik.chempred.client.application.train.TrainView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
@@ -44,6 +46,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     CompoundsView compoundsView;
     @Inject
     TrainView trainView;
+    @Inject
+    ReportView reportView;
 
     interface MyView extends View, HasUiHandlers<PresenterUiHandler> {
         void setElement(ElementDao element);
@@ -123,6 +127,11 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @Override
     public void handleCompoundsClick() {
         addToPopupSlot(new CompoundsPresenter(getEventBus(), compoundsView));
+    }
+
+    @Override
+    public void handleReportClick() {
+        addToPopupSlot(new ReportPresenter(getEventBus(), reportView));
     }
 
     @Override

@@ -26,5 +26,7 @@ public class NeuralNetworkModel implements Serializable {
     private double minOutputValue;
     @Column(name = "max_output_value")
     private double maxOutputValue;
+    @Column(name = "total_error")
+    private double totalError;
 
 }

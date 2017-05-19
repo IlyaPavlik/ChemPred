@@ -1,9 +1,6 @@
 package ru.pavlik.chempred.client.application.periodictable;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -11,13 +8,13 @@ import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.event.shared.EventBus;
-import com.gwtplatform.mvp.client.PopupViewWithUiHandlers;
+import ru.pavlik.chempred.client.application.base.BasePopupView;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 
 import javax.inject.Inject;
 import java.util.List;
 
-public class PeriodicTableView extends PopupViewWithUiHandlers<PresenterUiHandler> implements PeriodicTablePresenter.MyView {
+public class PeriodicTableView extends BasePopupView<PresenterUiHandler> implements PeriodicTablePresenter.MyView {
 
     private static final int COLUMN_COUNT = 18;
     private static final int ROW_COUNT = 7 + 2; // +2 for extra elements
@@ -40,8 +37,6 @@ public class PeriodicTableView extends PopupViewWithUiHandlers<PresenterUiHandle
     @UiField
     Style style;
 
-    private HandlerRegistration keyHandler;
-
     interface Binder extends UiBinder<PopupPanel, PeriodicTableView> {
     }
 
@@ -57,18 +52,8 @@ public class PeriodicTableView extends PopupViewWithUiHandlers<PresenterUiHandle
 
     @Override
     protected void onAttach() {
-        keyHandler = asWidget().getParent().addDomHandler(event -> {
-            if (event.getNativeKeyCode() == KeyCodes.KEY_ESCAPE) {
-                hide();
-            }
-        }, KeyDownEvent.getType());
-
+        super.onAttach();
         getUiHandlers().loadElements();
-    }
-
-    @Override
-    protected void onDetach() {
-        keyHandler.removeHandler();
     }
 
     @Override
