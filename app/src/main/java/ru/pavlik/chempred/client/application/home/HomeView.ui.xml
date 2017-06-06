@@ -136,14 +136,21 @@
         <g:row>
             <g:cell/>
             <g:customCell styleName="{style.bottom}">
-                <g:HorizontalPanel>
-                    <g:cell width="50%">
-                        <cm:CompoundInfoWidget ui:field="compoundInfo" addStyleNames="{style.block-info}"/>
-                    </g:cell>
-                    <g:cell width="50%">
-                        <pr:PredictionWidget ui:field="predictionInfo" addStyleNames="{style.block-info}"/>
-                    </g:cell>
-                </g:HorizontalPanel>
+                <g:FlowPanel>
+                    <b:Button icon="CHEVRON_UP" width="100%" height="20px" addStyleNames="{style.button-hide}"
+                              dataToggle="COLLAPSE" dataTarget="#infoCollapse" ui:field="infoButton"/>
+
+                    <b:Collapse b:id="infoCollapse" ui:field="bottomCollapse" toggle="false">
+                        <g:HorizontalPanel>
+                            <g:cell width="50%">
+                                <cm:CompoundInfoWidget ui:field="compoundInfo" addStyleNames="{style.block-info}"/>
+                            </g:cell>
+                            <g:cell width="50%">
+                                <pr:PredictionWidget ui:field="predictionInfo" addStyleNames="{style.block-info}"/>
+                            </g:cell>
+                        </g:HorizontalPanel>
+                    </b:Collapse>
+                </g:FlowPanel>
             </g:customCell>
             <g:cell/>
         </g:row>

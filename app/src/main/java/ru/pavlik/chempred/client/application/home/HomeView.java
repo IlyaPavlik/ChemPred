@@ -8,7 +8,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Collapse;
 import org.gwtbootstrap3.client.ui.TextBox;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import ru.pavlik.chempred.client.model.LinkType;
 import ru.pavlik.chempred.client.model.converter.ElementConverter;
 import ru.pavlik.chempred.client.model.converter.StructureConverter;
@@ -32,6 +35,10 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     CompoundInfoWidget compoundInfo;
     @UiField
     PredictionWidget predictionInfo;
+    @UiField
+    Button infoButton;
+    @UiField
+    Collapse bottomCollapse;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
@@ -48,8 +55,10 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     protected void onAttach() {
         super.onAttach();
 
-        Scheduler.get().scheduleDeferred(() ->
-                drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight()));
+        Scheduler.get().scheduleDeferred(() -> {
+            drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight());
+        });
+
         drawPanel.setOnStructureUpdateListener(structure -> {
             StructureDao structureDao = structureConverter.convertToDao(structure);
             getUiHandlers().handleUpdateStructure(structureDao);
@@ -58,6 +67,14 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
             Structure structure = drawPanel.getStructure();
             StructureDao structureDao = structureConverter.convertToDao(structure);
             getUiHandlers().handlePredictionClick(structureDao.getLinks());
+        });
+
+        infoButton.addClickHandler(event -> {
+            if (bottomCollapse.isHidden()) {
+                infoButton.setIcon(IconType.CHEVRON_DOWN);
+            } else {
+                infoButton.setIcon(IconType.CHEVRON_UP);
+            }
         });
     }
 

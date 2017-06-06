@@ -127,8 +127,8 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
         outer = D3.select(this)
                 .append("svg")
-                .attr("width", width)
-                .attr("height", height);
+                .attr("width", "100%")
+                .attr("height", "100%");
 
         zoomSelection = outer
                 .append("svg:g")
@@ -142,8 +142,8 @@ public class DrawPanelWidget extends FlowPanel implements IsWidget {
 
 
         vis.append("svg:rect")
-                .attr("width", width)
-                .attr("height", height)
+                .attr("width", "100%")
+                .attr("height", "100%")
                 .attr("fill", "white");
 
         //define pattern for Down link
