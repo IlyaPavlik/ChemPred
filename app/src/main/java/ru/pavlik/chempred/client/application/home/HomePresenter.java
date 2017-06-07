@@ -100,6 +100,7 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
             @Override
             public void onSuccess(StructureDao structure) {
                 getView().setStructure(structure);
+                handleUpdateStructure(structure);
             }
         });
     }

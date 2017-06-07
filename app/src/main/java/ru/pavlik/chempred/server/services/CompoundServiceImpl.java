@@ -9,12 +9,10 @@ import org.openscience.cdk.interfaces.IAtom;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
-import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.services.compound.CompoundService;
 import ru.pavlik.chempred.server.model.Compound;
-import ru.pavlik.chempred.server.model.Element;
 import ru.pavlik.chempred.server.model.converter.AtomContainerConverter;
 import ru.pavlik.chempred.server.model.converter.CompoundConverter;
 import ru.pavlik.chempred.server.model.converter.ElementConverter;
@@ -32,16 +30,7 @@ public class CompoundServiceImpl extends RemoteServiceServlet implements Compoun
 
     @Override
     public StructureDao parseSmiles(String smiles) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
-        Query query = session.createQuery("from Element");
-        List<Element> elements = query.list();
-        List<ElementDao> elementDaoList = new ArrayList<>();
-        for (Element element : elements) {
-            elementDaoList.add(elementConverter.convertToDao(element));
-        }
-        session.getTransaction().commit();
-        return SmilesUtils.parseSmiles(elementDaoList, smiles);
+        return SmilesUtils.parseSmiles(smiles);
     }
 
     @Override

@@ -47,15 +47,14 @@ public class StructureConverter {
         }
 
         for (LinkDao daoLink : daoLinks) {
-            elementLinks.add(
-                    ElementLink.create(
-                            elementNodes.get(daoLink.getElementSource()),
-                            elementNodes.get(daoLink.getElementTarget()),
-                            daoLink.getLinkType()
-                    )
-            );
-        }
+            ElementNode source = elementNodes.get(daoLink.getElementSource());
+            ElementNode target = elementNodes.get(daoLink.getElementTarget());
 
+            source.setValence(source.getValence() - daoLink.getLinkType().getWeight());
+            target.setValence(target.getValence() - daoLink.getLinkType().getWeight());
+
+            elementLinks.add(ElementLink.create(source, target, daoLink.getLinkType()));
+        }
 
         Structure structure = new Structure();
         structure.setElementNodes(new ArrayList<>(elementNodes.values()));
