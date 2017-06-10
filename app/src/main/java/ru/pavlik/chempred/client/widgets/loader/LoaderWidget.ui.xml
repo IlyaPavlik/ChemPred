@@ -4,8 +4,6 @@
     <ui:style src="loader.css"/>
 
     <g:HTML>
-        <div class="{style.cssload-container}">
-            <div class="{style.cssload-whirlpool}"/>
-        </div>
+        <div class='{style.spinftw}'/>
     </g:HTML>
 </ui:UiBinder>

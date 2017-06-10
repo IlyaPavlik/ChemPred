@@ -6,6 +6,8 @@ import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import org.gwtbootstrap3.client.ui.Button;
@@ -19,13 +21,22 @@ import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.model.js.Structure;
+import ru.pavlik.chempred.client.utils.EffectUtils;
 import ru.pavlik.chempred.client.widgets.DrawPanelWidget;
 import ru.pavlik.chempred.client.widgets.compoundinfo.CompoundInfoWidget;
+import ru.pavlik.chempred.client.widgets.loader.LoaderWidget;
 import ru.pavlik.chempred.client.widgets.prediction.PredictionWidget;
 
 import javax.inject.Inject;
 
 public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements HomePresenter.MyView {
+
+    private static final int LOADER_DURATION = 2000;
+
+    @UiField
+    LoaderWidget loader;
+    @UiField
+    Grid content;
 
     @UiField
     DrawPanelWidget drawPanel;
@@ -54,6 +65,15 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     @Override
     protected void onAttach() {
         super.onAttach();
+
+        Timer timer = new Timer() {
+            @Override
+            public void run() {
+                EffectUtils.fadeOut(loader, 200);
+                EffectUtils.fadeIn(content, 500);
+            }
+        };
+        timer.schedule(LOADER_DURATION);
 
         Scheduler.get().scheduleDeferred(() -> {
             drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight());
