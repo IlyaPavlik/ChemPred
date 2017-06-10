@@ -5,9 +5,9 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.web.bindery.event.shared.EventBus;
+import org.gwtbootstrap3.client.ui.Button;
 import ru.pavlik.chempred.client.application.base.BasePopupView;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 
@@ -60,13 +60,15 @@ public class PeriodicTableView extends BasePopupView<PresenterUiHandler> impleme
     public void showElements(List<ElementDao> elements) {
         for (ElementDao element : elements) {
             if (element.getGroup() != null && element.getPeriod() != null) {
-                HTML label = new HTML(element.getSymbol());
-                label.setStyleName(style.cell());
-                label.addClickHandler(event -> {
+                Button button = new Button();
+                button.setText(element.getSymbol());
+                button.addStyleName(style.cell());
+                button.addClickHandler(event -> {
                     getUiHandlers().handleElementClick(element);
                     hide();
                 });
-                grid.setWidget(element.getPeriod() - 1, element.getGroup() - 1, label);
+
+                grid.setWidget(element.getPeriod() - 1, element.getGroup() - 1, button);
             }
         }
     }

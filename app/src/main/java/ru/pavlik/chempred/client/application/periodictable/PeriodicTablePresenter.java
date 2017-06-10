@@ -1,12 +1,12 @@
 package ru.pavlik.chempred.client.application.periodictable;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
 import ru.pavlik.chempred.client.model.events.SelectElementEvent;
+import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
 import ru.pavlik.chempred.client.services.element.ElementService;
 import ru.pavlik.chempred.client.services.element.ElementServiceAsync;
 import ru.pavlik.chempred.client.utils.Utils;
@@ -30,12 +30,7 @@ public class PeriodicTablePresenter extends PresenterWidget<PeriodicTablePresent
     }
 
     public void loadElements() {
-        elementService.getElements(new AsyncCallback<List<ElementDao>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+        elementService.getElements(new ErrorHandlerCallback<List<ElementDao>>() {
             @Override
             public void onSuccess(List<ElementDao> result) {
                 Utils.console("Elements loaded: " + result.size());
