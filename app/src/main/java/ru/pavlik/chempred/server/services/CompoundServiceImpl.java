@@ -16,6 +16,7 @@ import ru.pavlik.chempred.server.model.Compound;
 import ru.pavlik.chempred.server.model.converter.AtomContainerConverter;
 import ru.pavlik.chempred.server.model.converter.CompoundConverter;
 import ru.pavlik.chempred.server.model.converter.ElementConverter;
+import ru.pavlik.chempred.server.utils.BruttoUtils;
 import ru.pavlik.chempred.server.utils.HibernateUtil;
 import ru.pavlik.chempred.server.utils.SmilesUtils;
 
@@ -105,5 +106,17 @@ public class CompoundServiceImpl extends RemoteServiceServlet implements Compoun
         }
 
         return compoundDaoList;
+    }
+
+    @Override
+    public void addNewCompound(final CompoundDao newCompound) {
+        newCompound.setBrutto(BruttoUtils.bruttoFromSmiles(newCompound.getSmiles()));
+
+        final Compound compound = compoundConverter.convertToDB(newCompound);
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+
+        session.saveOrUpdate(compound);
+        session.getTransaction().commit();
     }
 }

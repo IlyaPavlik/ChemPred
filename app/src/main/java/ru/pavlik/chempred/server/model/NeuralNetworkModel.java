@@ -18,15 +18,23 @@ import java.io.Serializable;
 public class NeuralNetworkModel implements Serializable {
 
     @Id
-    private int id = 1;
+    private int id;
     @Column(name = "neural_network")
     @Type(type = "java.io.Serializable")
     private NeuralNetwork neuralNetwork;
-    @Column(name = "min_output_value")
-    private double minOutputValue;
-    @Column(name = "max_output_value")
-    private double maxOutputValue;
+    @Column(name = "current_iteration")
+    private int currentIteration;
     @Column(name = "total_error")
     private double totalError;
 
+    protected NeuralNetworkModel() {
+    }
+
+    public NeuralNetworkModel(TypeId id) {
+        this.id = id.ordinal();
+    }
+
+    public enum TypeId {
+        LEL, UEL
+    }
 }

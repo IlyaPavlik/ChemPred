@@ -1,0 +1,51 @@
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+        >
+
+    <ui:style src="compound_edit.css"/>
+
+    <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true" addStyleNames="{style.popup}"
+                  glassEnabled="true" glassStyleName="{style.popup_background}">
+        <b:Panel addStyleNames="{style.panel}">
+
+            <b:FormGroup>
+                <b:FormLabel for="formName">Наименование</b:FormLabel>
+                <g:FlowPanel>
+                    <b:TextBox ui:field="name" b:id="formName"/>
+                </g:FlowPanel>
+            </b:FormGroup>
+
+            <b:FormGroup ui:field="smilesGroup">
+                <b:FormLabel for="formSmiles">SMILES</b:FormLabel>
+                <b:TextBox ui:field="smiles" b:id="formSmiles"/>
+            </b:FormGroup>
+
+            <b:FormGroup>
+                <b:FormLabel for="formSmiles">Нижний концентрационный предел воспламенения</b:FormLabel>
+                <b:InputGroup>
+                    <b:TextBox ui:field="lel" autoComplete="false"/>
+                    <b:InputGroupButton>
+                        <b:Button ui:field="lelPredict" text="Спрогнозировать"/>
+                    </b:InputGroupButton>
+                </b:InputGroup>
+            </b:FormGroup>
+
+            <b:FormGroup>
+                <b:FormLabel for="formSmiles">Верхний концентрационный предел воспламенения</b:FormLabel>
+                <b:InputGroup>
+                    <b:TextBox ui:field="uel" autoComplete="false"/>
+                    <b:InputGroupButton>
+                        <b:Button ui:field="uelPredict" text="Спрогнозировать"/>
+                    </b:InputGroupButton>
+                </b:InputGroup>
+            </b:FormGroup>
+
+            <b:FormGroup>
+                <g:FlowPanel addStyleNames="{style.add_button}">
+                    <b:Button ui:field="add">Добавить</b:Button>
+                </g:FlowPanel>
+            </b:FormGroup>
+        </b:Panel>
+    </g:PopupPanel>
+</ui:UiBinder>

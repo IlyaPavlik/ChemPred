@@ -12,7 +12,8 @@ public class CompoundConverter extends BaseConverter<CompoundDao, Compound> {
         compoundDao.setName(compound.getName());
         compoundDao.setBrutto(compound.getBrutto());
         compoundDao.setSmiles(compound.getSmiles());
-        compoundDao.setLowFactor(compound.getExperimentalFactor());
+        compoundDao.setLowFactor(compound.getExperimentalLowerFactor());
+        compoundDao.setUpperFactor(compound.getExperimentalUpperFactor());
         return compoundDao;
     }
 
@@ -23,7 +24,8 @@ public class CompoundConverter extends BaseConverter<CompoundDao, Compound> {
         compound.setName(compoundDao.getName());
         compound.setBrutto(compoundDao.getBrutto());
         compound.setSmiles(compoundDao.getSmiles());
-        compound.setPredictionFactor(compoundDao.getLowFactor());
+        compound.setExperimentalLowerFactor(compoundDao.getLowFactor());
+        compound.setExperimentalUpperFactor(compoundDao.getUpperFactor());
         return compound;
     }
 }

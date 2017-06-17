@@ -7,7 +7,7 @@
     <ui:style src="prediction.css"/>
 
     <b:Panel>
-        <b:PanelHeader>
+        <b:PanelHeader addStyleNames="{style.block-info-header}">
             <b:Heading size="H3" text="Концентрационный предел воспламенения"/>
         </b:PanelHeader>
         <b:PanelBody addStyleNames="{style.block-info-body}">

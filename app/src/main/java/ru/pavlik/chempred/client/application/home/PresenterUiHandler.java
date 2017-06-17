@@ -1,10 +1,7 @@
 package ru.pavlik.chempred.client.application.home;
 
 import com.gwtplatform.mvp.client.UiHandlers;
-import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
-
-import java.util.List;
 
 interface PresenterUiHandler extends UiHandlers {
     void handleElementClick(String sign);
@@ -13,7 +10,7 @@ interface PresenterUiHandler extends UiHandlers {
 
     void handleTrainClick();
 
-    void handlePredictionClick(List<LinkDao> links);
+    void handlePredictionClick(StructureDao structureDao);
 
     void handlePeriodicTableClick();
 
@@ -22,4 +19,6 @@ interface PresenterUiHandler extends UiHandlers {
     void handleCompoundsClick();
 
     void handleReportClick();
+
+    void handleAddCompound(StructureDao structureDao);
 }

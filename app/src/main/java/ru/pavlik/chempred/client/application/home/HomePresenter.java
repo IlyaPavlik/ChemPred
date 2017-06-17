@@ -9,6 +9,8 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import ru.pavlik.chempred.client.application.compounds.CompoundsPresenter;
 import ru.pavlik.chempred.client.application.compounds.CompoundsView;
+import ru.pavlik.chempred.client.application.compounds.compound_edit.CompoundEditPresenter;
+import ru.pavlik.chempred.client.application.compounds.compound_edit.CompoundEditView;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTablePresenter;
 import ru.pavlik.chempred.client.application.periodictable.PeriodicTableView;
 import ru.pavlik.chempred.client.application.report.ReportPresenter;
@@ -17,7 +19,6 @@ import ru.pavlik.chempred.client.application.train.TrainPresenter;
 import ru.pavlik.chempred.client.application.train.TrainView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.ElementDao;
-import ru.pavlik.chempred.client.model.dao.LinkDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.model.events.BuildCompoundEvent;
 import ru.pavlik.chempred.client.model.events.SelectElementEvent;
@@ -32,7 +33,6 @@ import ru.pavlik.chempred.client.services.prediction.PredictionService;
 import ru.pavlik.chempred.client.services.prediction.PredictionServiceAsync;
 
 import javax.inject.Inject;
-import java.util.List;
 
 public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy> implements PresenterUiHandler {
 
@@ -48,6 +48,8 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     TrainView trainView;
     @Inject
     ReportView reportView;
+    @Inject
+    CompoundEditView compoundEditView;
 
     interface MyView extends View, HasUiHandlers<PresenterUiHandler> {
         void setElement(ElementDao element);
@@ -56,7 +58,9 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
         void showCompoundInfo(CompoundDao compoundDao);
 
-        void showPredictionData(double lowRatio);
+        void showLELValue(double uelValue);
+
+        void showUELValue(double lelValue);
     }
 
     @ProxyStandard
@@ -106,11 +110,17 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     }
 
     @Override
-    public void handlePredictionClick(List<LinkDao> links) {
-        predictionService.predict(links, new ErrorHandlerCallback<Double>() {
+    public void handlePredictionClick(final StructureDao structure) {
+        predictionService.predictLEL(structure, new ErrorHandlerCallback<Double>() {
             @Override
-            public void onSuccess(Double result) {
-                getView().showPredictionData(result);
+            public void onSuccess(Double lelValue) {
+                getView().showLELValue(lelValue);
+            }
+        });
+        predictionService.predictUEL(structure, new ErrorHandlerCallback<Double>() {
+            @Override
+            public void onSuccess(Double uelValue) {
+                getView().showUELValue(uelValue);
             }
         });
     }
@@ -133,6 +143,16 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
     @Override
     public void handleReportClick() {
         addToPopupSlot(new ReportPresenter(getEventBus(), reportView));
+    }
+
+    @Override
+    public void handleAddCompound(final StructureDao structureDao) {
+        compoundService.getCompound(structureDao, new ErrorHandlerCallback<CompoundDao>() {
+            @Override
+            public void onSuccess(CompoundDao result) {
+                addToPopupSlot(new CompoundEditPresenter(getEventBus(), compoundEditView, result.getSmiles()));
+            }
+        });
     }
 
     @Override

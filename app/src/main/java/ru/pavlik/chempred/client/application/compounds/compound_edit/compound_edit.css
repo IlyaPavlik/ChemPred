@@ -1,0 +1,17 @@
+.popup {
+    width: 25%;
+    z-index: 20;
+}
+
+.popup_background {
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
+
+.panel {
+    padding: 20px;
+}
+
+.add_button {
+    text-align: right;
+}

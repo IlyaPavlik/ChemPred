@@ -17,4 +17,6 @@ public interface CompoundServiceAsync {
     void getCompounds(AsyncCallback<List<CompoundDao>> async);
 
     void findCompounds(String query, AsyncCallback<List<CompoundDao>> async);
+
+    void addNewCompound(CompoundDao newCompound, AsyncCallback<Void> async);
 }

@@ -32,7 +32,14 @@
                                     </b:DropDownMenu>
                                 </b:ListDropDown>
 
-                                <b:AnchorListItem ui:field="compounds">Соединения</b:AnchorListItem>
+                                <b:ListDropDown>
+                                    <b:AnchorButton dataToggle="DROPDOWN">Соединения</b:AnchorButton>
+                                    <b:DropDownMenu>
+                                        <b:AnchorListItem ui:field="addCompound">Добавить...</b:AnchorListItem>
+                                        <b:AnchorListItem ui:field="compounds">Список</b:AnchorListItem>
+                                    </b:DropDownMenu>
+                                </b:ListDropDown>
+
                                 <b:AnchorListItem ui:field="train">Обучение</b:AnchorListItem>
                                 <b:AnchorListItem ui:field="report">Отчет</b:AnchorListItem>
                             </b:NavbarNav>

@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.Widget;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Collapse;
 import org.gwtbootstrap3.client.ui.TextBox;
@@ -50,6 +51,8 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     Button infoButton;
     @UiField
     Collapse bottomCollapse;
+    @UiField
+    AnchorListItem addCompound;
 
     private ElementConverter elementConverter = new ElementConverter();
     private StructureConverter structureConverter = new StructureConverter();
@@ -75,9 +78,8 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
         };
         timer.schedule(LOADER_DURATION);
 
-        Scheduler.get().scheduleDeferred(() -> {
-            drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight());
-        });
+        Scheduler.get().scheduleDeferred(() ->
+                drawPanel.init(drawPanel.getOffsetWidth(), drawPanel.getOffsetHeight()));
 
         drawPanel.setOnStructureUpdateListener(structure -> {
             StructureDao structureDao = structureConverter.convertToDao(structure);
@@ -86,7 +88,7 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
         predictionInfo.setOnPredictClickListener(() -> {
             Structure structure = drawPanel.getStructure();
             StructureDao structureDao = structureConverter.convertToDao(structure);
-            getUiHandlers().handlePredictionClick(structureDao.getLinks());
+            getUiHandlers().handlePredictionClick(structureDao);
         });
 
         infoButton.addClickHandler(event -> {
@@ -95,6 +97,10 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
             } else {
                 infoButton.setIcon(IconType.CHEVRON_UP);
             }
+        });
+        addCompound.addClickHandler(event -> {
+            StructureDao structure = structureConverter.convertToDao(drawPanel.getStructure());
+            getUiHandlers().handleAddCompound(structure);
         });
     }
 
@@ -117,9 +123,15 @@ public class HomeView extends ViewWithUiHandlers<PresenterUiHandler> implements 
     }
 
     @Override
-    public void showPredictionData(double lowRatio) {
+    public void showLELValue(double uelValue) {
         NumberFormat numberFormat = NumberFormat.getFormat("#.##");
-        predictionInfo.setLowRatio(numberFormat.format(lowRatio));
+        predictionInfo.setLowRatio(numberFormat.format(uelValue));
+    }
+
+    @Override
+    public void showUELValue(double lelValue) {
+        NumberFormat numberFormat = NumberFormat.getFormat("#.##");
+        predictionInfo.setHighRatio(numberFormat.format(lelValue));
     }
 
     @UiHandler("elementC")

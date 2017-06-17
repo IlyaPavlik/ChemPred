@@ -10,6 +10,8 @@ public class CompoundDao implements Serializable {
     private String smiles;
     private double lowFactor;
     private double lowFactorPrediction;
+    private double upperFactor;
+    private double upperFactorPrediction;
 
     public int getId() {
         return id;
@@ -57,5 +59,21 @@ public class CompoundDao implements Serializable {
 
     public void setLowFactorPrediction(double lowFactorPrediction) {
         this.lowFactorPrediction = lowFactorPrediction;
+    }
+
+    public double getUpperFactor() {
+        return upperFactor;
+    }
+
+    public void setUpperFactor(double upperFactor) {
+        this.upperFactor = upperFactor;
+    }
+
+    public double getUpperFactorPrediction() {
+        return upperFactorPrediction;
+    }
+
+    public void setUpperFactorPrediction(double upperFactorPrediction) {
+        this.upperFactorPrediction = upperFactorPrediction;
     }
 }

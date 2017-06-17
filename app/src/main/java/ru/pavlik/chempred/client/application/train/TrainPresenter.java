@@ -5,6 +5,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.DescriptorType;
 import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
@@ -108,7 +109,9 @@ public class TrainPresenter extends PresenterWidget<TrainPresenter.MyView> imple
     @Override
     public void handlerTrain(List<CompoundDao> compounds) {
         getView().showTrainProgress();
-        predictionService.train(compounds, new AsyncCallback<Double>() {
+        Notify.notify("Обучение началось");
+
+        predictionService.trainLELValue(compounds, new AsyncCallback<Double>() {
             @Override
             public void onFailure(Throwable caught) {
                 Utils.console(caught);
@@ -117,7 +120,23 @@ public class TrainPresenter extends PresenterWidget<TrainPresenter.MyView> imple
 
             @Override
             public void onSuccess(Double result) {
-                Utils.console("Total error: " + result);
+                Notify.notify("Сеть для НКПВ обучена");
+                Utils.console("LEL total error: " + result);
+                getView().hideTrainProgress();
+            }
+        });
+
+        predictionService.trainUELValue(compounds, new AsyncCallback<Double>() {
+            @Override
+            public void onFailure(Throwable caught) {
+                Utils.console(caught);
+                getView().hideTrainProgress();
+            }
+
+            @Override
+            public void onSuccess(Double result) {
+                Notify.notify("Сеть для ВКПВ обучена");
+                Utils.console("UEL total error: " + result);
                 getView().hideTrainProgress();
             }
         });

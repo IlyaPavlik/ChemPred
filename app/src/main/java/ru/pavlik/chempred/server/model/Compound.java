@@ -22,9 +22,13 @@ public class Compound implements Serializable {
     private String name;
     private String brutto;
     private String smiles;
-    @Column(name = "experimental_factor")
-    private Double experimentalFactor;
-    @Column(name = "prediction_factor")
-    private Double predictionFactor;
+    @Column(name = "experimental_lower_factor")
+    private Double experimentalLowerFactor;
+    @Column(name = "prediction_lower_factor")
+    private Double predictionLowerFactor;
+    @Column(name = "experimental_upper_factor")
+    private Double experimentalUpperFactor;
+    @Column(name = "prediction_upper_factor")
+    private Double predictionUpperFactor;
 
 }
