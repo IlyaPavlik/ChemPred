@@ -29,7 +29,8 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
 
     static final String COLUMN_CHECK = "check";
     static final String COLUMN_NAME = "Наименование";
-    static final String COLUMN_LOW_FACTOR = "НКПВ";
+    static final String COLUMN_LOWER_LIMIT = "НКПВ";
+    static final String COLUMN_UPPER_LIMIT = "ВКПВ";
 
     @UiField
     ListBox listBox;
@@ -42,7 +43,9 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
     @UiField
     Panel addAll;
     @UiField
-    Button train;
+    Button trainLEL;
+    @UiField
+    Button trainUEL;
 
     @UiField
     NavTabs navTabs;
@@ -164,11 +167,20 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
         TextColumn<Map<String, String>> lowFactorColumn = new TextColumn<Map<String, String>>() {
             @Override
             public String getValue(Map<String, String> values) {
-                return values.get(COLUMN_LOW_FACTOR);
+                return values.get(COLUMN_LOWER_LIMIT);
             }
         };
         dataGrid.setColumnWidth(lowFactorColumn, "80px");
-        dataGrid.addColumn(lowFactorColumn, COLUMN_LOW_FACTOR);
+        dataGrid.addColumn(lowFactorColumn, COLUMN_LOWER_LIMIT);
+
+        TextColumn<Map<String, String>> upperFactorColumn = new TextColumn<Map<String, String>>() {
+            @Override
+            public String getValue(Map<String, String> values) {
+                return values.get(COLUMN_UPPER_LIMIT);
+            }
+        };
+        dataGrid.setColumnWidth(upperFactorColumn, "80px");
+        dataGrid.addColumn(upperFactorColumn, COLUMN_UPPER_LIMIT);
 
         for (String descriptor : descriptors) {
             TextColumn<Map<String, String>> column = new TextColumn<Map<String, String>>() {
@@ -216,7 +228,8 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
         Map<String, String> columnValues = new HashMap<>();
         columnValues.put(COLUMN_NAME, compound.getName());
         columnValues.put(COLUMN_CHECK, "false");
-        columnValues.put(COLUMN_LOW_FACTOR, NumberFormat.getFormat("#.##").format(compound.getLowFactor()));
+        columnValues.put(COLUMN_LOWER_LIMIT, NumberFormat.getFormat("#.##").format(compound.getLowFactor()));
+        columnValues.put(COLUMN_UPPER_LIMIT, NumberFormat.getFormat("#.##").format(compound.getUpperFactor()));
         columnValues.putAll(descriptors);
 
         for (ListDataProvider<Map<String, String>> listDataProvider : listProviders.values()) {
@@ -227,13 +240,21 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
     }
 
     @Override
-    public void showTrainProgress() {
-        train.state().loading();
+    public void changeTrainLELStatus(boolean progress) {
+        if (progress) {
+            trainLEL.state().loading();
+        } else {
+            trainLEL.state().reset();
+        }
     }
 
     @Override
-    public void hideTrainProgress() {
-        train.state().reset();
+    public void changeTrainUELStatus(boolean progress) {
+        if (progress) {
+            trainUEL.state().loading();
+        } else {
+            trainUEL.state().reset();
+        }
     }
 
     @UiHandler("remove")
@@ -252,9 +273,14 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
         }
     }
 
-    @UiHandler("train")
-    public void onTrainClick(ClickEvent event) {
-        getUiHandlers().handlerTrain(selectedCompounds);
+    @UiHandler("trainLEL")
+    public void onTrainLELClick(ClickEvent event) {
+        getUiHandlers().handlerLELTrain(selectedCompounds);
+    }
+
+    @UiHandler("trainUEL")
+    public void onTrainUELClick(ClickEvent event) {
+        getUiHandlers().handlerUELTrain(selectedCompounds);
     }
 
     private void visiblePlaceholder(boolean visible) {

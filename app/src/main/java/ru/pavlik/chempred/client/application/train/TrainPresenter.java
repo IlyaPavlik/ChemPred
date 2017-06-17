@@ -35,9 +35,9 @@ public class TrainPresenter extends PresenterWidget<TrainPresenter.MyView> imple
 
         void addCompound(CompoundDao compound, Map<String, String> descriptors);
 
-        void showTrainProgress();
+        void changeTrainLELStatus(boolean progress);
 
-        void hideTrainProgress();
+        void changeTrainUELStatus(boolean progress);
     }
 
     public TrainPresenter(EventBus eventBus, MyView view) {
@@ -107,37 +107,44 @@ public class TrainPresenter extends PresenterWidget<TrainPresenter.MyView> imple
     }
 
     @Override
-    public void handlerTrain(List<CompoundDao> compounds) {
-        getView().showTrainProgress();
-        Notify.notify("Обучение началось");
+    public void handlerLELTrain(List<CompoundDao> compounds) {
+        getView().changeTrainLELStatus(true);
+        Notify.notify("Обучение НКПВ началось");
 
         predictionService.trainLELValue(compounds, new AsyncCallback<Double>() {
             @Override
             public void onFailure(Throwable caught) {
                 Utils.console(caught);
-                getView().hideTrainProgress();
+                getView().changeTrainLELStatus(false);
             }
 
             @Override
             public void onSuccess(Double result) {
                 Notify.notify("Сеть для НКПВ обучена");
                 Utils.console("LEL total error: " + result);
-                getView().hideTrainProgress();
+                getView().changeTrainLELStatus(false);
             }
         });
+    }
+
+    @Override
+    public void handlerUELTrain(List<CompoundDao> compounds) {
+        getView().changeTrainUELStatus(true);
+        Notify.notify("Обучение ВКПВ началось");
+
 
         predictionService.trainUELValue(compounds, new AsyncCallback<Double>() {
             @Override
             public void onFailure(Throwable caught) {
                 Utils.console(caught);
-                getView().hideTrainProgress();
+                getView().changeTrainUELStatus(false);
             }
 
             @Override
             public void onSuccess(Double result) {
                 Notify.notify("Сеть для ВКПВ обучена");
                 Utils.console("UEL total error: " + result);
-                getView().hideTrainProgress();
+                getView().changeTrainUELStatus(false);
             }
         });
     }

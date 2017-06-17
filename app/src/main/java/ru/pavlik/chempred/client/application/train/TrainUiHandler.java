@@ -15,5 +15,7 @@ public interface TrainUiHandler extends UiHandlers {
 
     void loadCompoundDescriptors(CompoundDao compoundDao);
 
-    void handlerTrain(List<CompoundDao> compounds);
+    void handlerLELTrain(List<CompoundDao> compounds);
+
+    void handlerUELTrain(List<CompoundDao> compounds);
 }

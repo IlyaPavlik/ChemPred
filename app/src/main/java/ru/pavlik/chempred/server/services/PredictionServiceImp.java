@@ -31,9 +31,6 @@ import java.util.TreeMap;
 @Slf4j
 public class PredictionServiceImp extends RemoteServiceServlet implements PredictionService {
 
-    private static final int MIN_VALUE = 0;
-    private static final int MAX_VALUE = 100;
-
     private static final int LEARN_ITERATION = 10_000;
     private static final double LEARN_MAX_ERROR = 0.0001;
     private static final double LEARN_RATE = 0.1;
@@ -122,7 +119,7 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
             networkModel.getNeuralNetwork().setInput(inputs);
             networkModel.getNeuralNetwork().calculate();
             double[] outputs = networkModel.getNeuralNetwork().getOutput();
-            outputs = unnormalizeData(outputs, MIN_VALUE, MAX_VALUE);
+            outputs = unnormalizeData(outputs, networkModel.getMinOutput(), networkModel.getMaxOutput());
             if (useLEL) {
                 compound.setLowFactorPrediction(outputs[0]);
             } else {
@@ -195,8 +192,20 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
             outputs[i] = useLEL ? compound.getLowFactor() : compound.getUpperFactor();
         }
 
+        double max = Double.MIN_VALUE;
+        double min = Double.MAX_VALUE;
+
+        for (double v : outputs) {
+            if (v > max) {
+                max = v;
+            }
+            if (v < min) {
+                min = v;
+            }
+        }
+
         inputs = normalizeData(inputs);
-        outputs = normalizeData(outputs, MIN_VALUE, MAX_VALUE);
+        outputs = normalizeData(outputs, min, max);
 
         DataSet dataSet = new DataSet(sourceDescriptors.size(), 1);
         NeuralNetwork neuralNetwork = getNeuralNetwork(sourceDescriptors.size());
@@ -212,6 +221,8 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
                 ? NeuralNetworkModel.TypeId.LEL
                 : NeuralNetworkModel.TypeId.UEL);
         networkModel.setNeuralNetwork(neuralNetwork);
+        networkModel.setMinOutput(min);
+        networkModel.setMaxOutput(max);
         networkModel.setTotalError(totalError);
         networkModel.setCurrentIteration(learningRule.getCurrentIteration());
         session.saveOrUpdate(networkModel);
@@ -237,7 +248,7 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         networkModel.getNeuralNetwork().setInput(inputs);
         networkModel.getNeuralNetwork().calculate();
         double[] outputs = networkModel.getNeuralNetwork().getOutput();
-        outputs = unnormalizeData(outputs, MIN_VALUE, MAX_VALUE);
+        outputs = unnormalizeData(outputs, networkModel.getMinOutput(), networkModel.getMaxOutput());
 
         return outputs[0];
     }

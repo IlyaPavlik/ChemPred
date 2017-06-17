@@ -37,7 +37,10 @@
                     <g:FlowPanel addStyleNames="{style.bottom_panel}">
                         <b:Button icon="REMOVE" ui:field="remove"/>
 
-                        <b:Button ui:field="train" text="Обучить" dataLoadingText="Обучение..."
+                        <b:Button ui:field="trainUEL" text="Обучить ВКПВ" dataLoadingText="Обучение..."
+                                  addStyleNames="{style.train}"/>
+
+                        <b:Button ui:field="trainLEL" text="Обучить НКПВ" dataLoadingText="Обучение..."
                                   addStyleNames="{style.train}"/>
                     </g:FlowPanel>
                 </g:cell>
