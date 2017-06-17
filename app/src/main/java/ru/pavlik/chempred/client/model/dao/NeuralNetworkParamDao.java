@@ -7,7 +7,8 @@ public class NeuralNetworkParamDao implements Serializable {
     private String activationFunction;
     private double maxError;
     private double rate;
-    private double iterations;
+    private double totalIterations;
+    private int currentIterations;
     private int inputSize;
     private int outputSize;
     private double totalError;
@@ -36,12 +37,20 @@ public class NeuralNetworkParamDao implements Serializable {
         this.rate = rate;
     }
 
-    public double getIterations() {
-        return iterations;
+    public double getTotalIterations() {
+        return totalIterations;
     }
 
-    public void setIterations(double iterations) {
-        this.iterations = iterations;
+    public void setTotalIterations(double totalIterations) {
+        this.totalIterations = totalIterations;
+    }
+
+    public int getCurrentIterations() {
+        return currentIterations;
+    }
+
+    public void setCurrentIterations(int currentIterations) {
+        this.currentIterations = currentIterations;
     }
 
     public int getInputSize() {

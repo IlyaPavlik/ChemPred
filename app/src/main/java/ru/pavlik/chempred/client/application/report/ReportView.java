@@ -8,10 +8,12 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.web.bindery.event.shared.EventBus;
+import org.gwtbootstrap3.client.ui.TabListItem;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import ru.pavlik.chempred.client.application.base.BasePopupView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.NeuralNetworkParamDao;
+import ru.pavlik.chempred.client.utils.NumberUtils;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -38,22 +40,42 @@ public class ReportView extends BasePopupView<ReportUiHandler> implements Report
     HTML rateField;
 
     @UiField
+    HTML currentIterationField;
+    @UiField
     HTML totalErrorField;
+
+    @UiField
+    TabListItem lelTab;
+    @UiField
+    TabListItem uelTab;
 
     @Inject
     public ReportView(Binder uiBinder, EventBus eventBus) {
         super(eventBus);
         initWidget(uiBinder.createAndBindUi(this));
+
+        lelTab.addClickHandler(event -> {
+            uelTab.setActive(false);
+            lelTab.setActive(true);
+
+            clearData();
+            init(true);
+        });
+
+        uelTab.addClickHandler(event -> {
+            uelTab.setActive(true);
+            lelTab.setActive(false);
+
+            clearData();
+            init(false);
+        });
     }
 
     @Override
     protected void onAttach() {
         super.onAttach();
-        while (table.getColumnCount() > 0) {
-            table.removeColumn(0);
-        }
-        initTableColumns();
-        getUiHandlers().loadData();
+        clearData();
+        init(true);
     }
 
     @Override
@@ -66,16 +88,24 @@ public class ReportView extends BasePopupView<ReportUiHandler> implements Report
     @Override
     public void showNeuralNetworkParams(NeuralNetworkParamDao neuralNetworkParam) {
         activationField.setText(neuralNetworkParam.getActivationFunction());
-        inputsField.setText(String.valueOf(neuralNetworkParam.getInputSize()));
-        outputsField.setText(String.valueOf(neuralNetworkParam.getOutputSize()));
-        iterationField.setText(String.valueOf(neuralNetworkParam.getIterations()));
+        iterationField.setText(String.valueOf(neuralNetworkParam.getTotalIterations()));
         maxErrorField.setText(String.valueOf(neuralNetworkParam.getMaxError()));
         rateField.setText(String.valueOf(neuralNetworkParam.getRate()));
 
-        totalErrorField.setText(String.valueOf(neuralNetworkParam.getTotalError()));
+        inputsField.setText(String.valueOf(neuralNetworkParam.getInputSize()));
+        outputsField.setText(String.valueOf(neuralNetworkParam.getOutputSize()));
+        currentIterationField.setText(String.valueOf(neuralNetworkParam.getCurrentIterations()));
+
+        final double error = NumberUtils.round(neuralNetworkParam.getTotalError(), 8);
+        totalErrorField.setText(String.valueOf(error));
     }
 
-    private void initTableColumns() {
+    private void init(final boolean useLEL) {
+        initTableColumns(useLEL);
+        getUiHandlers().loadData(useLEL);
+    }
+
+    private void initTableColumns(final boolean useLEL) {
         TextColumn<CompoundDao> nameColumn = new TextColumn<CompoundDao>() {
             @Override
             public String getValue(CompoundDao object) {
@@ -84,20 +114,30 @@ public class ReportView extends BasePopupView<ReportUiHandler> implements Report
         };
         table.addColumn(nameColumn, "Наименование");
 
-        TextColumn<CompoundDao> lowFactor = new TextColumn<CompoundDao>() {
+        TextColumn<CompoundDao> exposureLimit = new TextColumn<CompoundDao>() {
             @Override
-            public String getValue(CompoundDao object) {
-                return String.valueOf(object.getLowFactor());
+            public String getValue(CompoundDao compound) {
+                return String.valueOf(useLEL
+                        ? compound.getLowFactor()
+                        : compound.getUpperFactor());
             }
         };
-        table.addColumn(lowFactor, "НКПРП");
+        table.addColumn(exposureLimit, useLEL ? "НКПВ" : "ВКПВ");
 
-        TextColumn<CompoundDao> lowFactorPredict = new TextColumn<CompoundDao>() {
+        TextColumn<CompoundDao> exposureLimitPredict = new TextColumn<CompoundDao>() {
             @Override
-            public String getValue(CompoundDao object) {
-                return NumberFormat.getFormat("#.##").format(object.getLowFactorPrediction());
+            public String getValue(CompoundDao compound) {
+                return NumberFormat.getFormat("#.##").format(useLEL
+                        ? compound.getLowFactorPrediction()
+                        : compound.getUpperFactorPrediction());
             }
         };
-        table.addColumn(lowFactorPredict, "НКПРП (Спрогнозированное)");
+        table.addColumn(exposureLimitPredict, useLEL ? "НКПВ (Спрогнозированное)" : "ВКПВ (Спрогнозированное)");
+    }
+
+    private void clearData() {
+        while (table.getColumnCount() > 0) {
+            table.removeColumn(0);
+        }
     }
 }

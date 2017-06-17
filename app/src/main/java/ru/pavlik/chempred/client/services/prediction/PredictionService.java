@@ -20,13 +20,13 @@ public interface PredictionService extends RemoteService {
 
     double predictUEL(String smiles);
 
-    List<CompoundDao> predictCompounds(List<CompoundDao> compounds);
+    List<CompoundDao> predictAllCompounds(boolean useLEL);
 
     double trainLELValue(List<CompoundDao> compounds);
 
     double trainUELValue(List<CompoundDao> compounds);
 
-    NeuralNetworkParamDao loadNeuralNetworkParams();
+    NeuralNetworkParamDao loadNeuralNetworkParams(boolean useLEL);
 
     class Service {
         private static PredictionServiceAsync ourInstance = GWT.create(PredictionService.class);

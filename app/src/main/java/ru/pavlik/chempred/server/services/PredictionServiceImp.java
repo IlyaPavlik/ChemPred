@@ -14,8 +14,10 @@ import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.NeuralNetworkParamDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
 import ru.pavlik.chempred.client.services.prediction.PredictionService;
+import ru.pavlik.chempred.server.model.Compound;
 import ru.pavlik.chempred.server.model.Descriptor;
 import ru.pavlik.chempred.server.model.NeuralNetworkModel;
+import ru.pavlik.chempred.server.model.converter.CompoundConverter;
 import ru.pavlik.chempred.server.utils.DescriptorUtils;
 import ru.pavlik.chempred.server.utils.HibernateUtil;
 import ru.pavlik.chempred.server.utils.SmilesUtils;
@@ -47,12 +49,17 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
     }
 
     @Override
-    public NeuralNetworkParamDao loadNeuralNetworkParams() {
+    public NeuralNetworkParamDao loadNeuralNetworkParams(final boolean useLEL) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel");
+
+        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel where id = :id");
+        neuralNetworkQuery.setParameter("id", useLEL
+                ? NeuralNetworkModel.TypeId.LEL.ordinal()
+                : NeuralNetworkModel.TypeId.UEL.ordinal());
         NeuralNetworkModel networkModel = (NeuralNetworkModel) neuralNetworkQuery.list().get(0);
         session.getTransaction().commit();
+
         NeuralNetwork neuralNetwork = networkModel.getNeuralNetwork();
         neuralNetwork.calculate();
 
@@ -60,9 +67,10 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         neuralNetworkParam.setActivationFunction(neuralNetwork.getLabel());
         neuralNetworkParam.setInputSize(neuralNetwork.getInputsCount());
         neuralNetworkParam.setOutputSize(neuralNetwork.getOutputsCount());
-        neuralNetworkParam.setIterations(LEARN_ITERATION);
+        neuralNetworkParam.setTotalIterations(LEARN_ITERATION);
         neuralNetworkParam.setMaxError(LEARN_MAX_ERROR);
         neuralNetworkParam.setRate(LEARN_RATE);
+        neuralNetworkParam.setCurrentIterations(networkModel.getCurrentIteration());
         neuralNetworkParam.setTotalError(networkModel.getTotalError());
 
         return neuralNetworkParam;
@@ -91,22 +99,37 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
     }
 
     @Override
-    public List<CompoundDao> predictCompounds(List<CompoundDao> compounds) {
+    public List<CompoundDao> predictAllCompounds(boolean useLEL) {
+        final CompoundConverter converter = new CompoundConverter();
+
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel");
+
+        Query compoundsQuery = session.createQuery("from Compound");
+        List<Compound> compounds = compoundsQuery.list();
+        List<CompoundDao> compoundDaoList = new ArrayList<>();
+        compounds.forEach(compound -> compoundDaoList.add(converter.convertToDao(compound)));
+
+        Query neuralNetworkQuery = session.createQuery("from NeuralNetworkModel where id = :id");
+        neuralNetworkQuery.setParameter("id", useLEL
+                ? NeuralNetworkModel.TypeId.LEL.ordinal()
+                : NeuralNetworkModel.TypeId.UEL.ordinal());
         NeuralNetworkModel networkModel = (NeuralNetworkModel) neuralNetworkQuery.list().get(0);
         session.getTransaction().commit();
 
-        for (CompoundDao compound : compounds) {
+        for (CompoundDao compound : compoundDaoList) {
             double[] inputs = buildInput(compound);
             networkModel.getNeuralNetwork().setInput(inputs);
             networkModel.getNeuralNetwork().calculate();
             double[] outputs = networkModel.getNeuralNetwork().getOutput();
             outputs = unnormalizeData(outputs, MIN_VALUE, MAX_VALUE);
-            compound.setLowFactorPrediction(outputs[0]);
+            if (useLEL) {
+                compound.setLowFactorPrediction(outputs[0]);
+            } else {
+                compound.setUpperFactorPrediction(outputs[0]);
+            }
         }
-        return compounds;
+        return compoundDaoList;
     }
 
     private double[] buildInput(CompoundDao compound) {

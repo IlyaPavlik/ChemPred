@@ -1,12 +1,12 @@
 package ru.pavlik.chempred.client.application.report;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PopupView;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.NeuralNetworkParamDao;
+import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
 import ru.pavlik.chempred.client.services.compound.CompoundService;
 import ru.pavlik.chempred.client.services.compound.CompoundServiceAsync;
 import ru.pavlik.chempred.client.services.prediction.PredictionService;
@@ -35,35 +35,15 @@ public class ReportPresenter extends PresenterWidget<ReportPresenter.MyView> imp
     }
 
     @Override
-    public void loadData() {
-        compoundService.getCompounds(new AsyncCallback<List<CompoundDao>>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+    public void loadData(final boolean useLEL) {
+        predictionService.predictAllCompounds(useLEL, new ErrorHandlerCallback<List<CompoundDao>>() {
             @Override
             public void onSuccess(List<CompoundDao> result) {
-                predictionService.predictCompounds(result, new AsyncCallback<List<CompoundDao>>() {
-                    @Override
-                    public void onFailure(Throwable caught) {
-                        Utils.console(caught);
-                    }
-
-                    @Override
-                    public void onSuccess(List<CompoundDao> result) {
-                        getView().showCompounds(result);
-                    }
-                });
+                getView().showCompounds(result);
             }
         });
 
-        predictionService.loadNeuralNetworkParams(new AsyncCallback<NeuralNetworkParamDao>() {
-            @Override
-            public void onFailure(Throwable caught) {
-                Utils.console(caught);
-            }
-
+        predictionService.loadNeuralNetworkParams(useLEL, new ErrorHandlerCallback<NeuralNetworkParamDao>() {
             @Override
             public void onSuccess(NeuralNetworkParamDao result) {
                 Utils.console(result);

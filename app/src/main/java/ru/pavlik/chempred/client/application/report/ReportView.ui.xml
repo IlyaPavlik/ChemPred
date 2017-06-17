@@ -9,6 +9,11 @@
     <g:PopupPanel autoHideOnHistoryEventsEnabled="true" autoHideEnabled="true" addStyleNames="{style.popup}"
                   glassEnabled="true" glassStyleName="{style.popup_background}">
         <b:Panel addStyleNames="{style.panel}">
+            <b:NavTabs addStyleNames="{style.tabs}">
+                <b:TabListItem active="true" text="НКПВ" ui:field="lelTab"/>
+                <b:TabListItem text="ВКПВ" ui:field="uelTab"/>
+            </b:NavTabs>
+
             <g:HorizontalPanel>
                 <g:cell width="50%">
                     <b:Panel addStyleNames="{style.left_panel}">
@@ -17,7 +22,7 @@
                     </b:Panel>
                 </g:cell>
                 <g:cell width="50%">
-                    <g:VerticalPanel>
+                    <g:VerticalPanel addStyleNames="{style.right_panel}">
                         <b:Panel addStyleNames="{style.right_top_panel}">
                             <b:Heading size="H4" text="Параметры обучения"/>
 
@@ -28,22 +33,6 @@
                                     </b:Column>
                                     <b:Column size="XS_6">
                                         <g:HTML ui:field="activationField"/>
-                                    </b:Column>
-                                </b:Row>
-                                <b:Row addStyleNames="{style.panel_row}">
-                                    <b:Column size="XS_6">
-                                        <bh:Strong text="Количество входов"/>
-                                    </b:Column>
-                                    <b:Column size="XS_6">
-                                        <g:HTML ui:field="inputsField"/>
-                                    </b:Column>
-                                </b:Row>
-                                <b:Row addStyleNames="{style.panel_row}">
-                                    <b:Column size="XS_6">
-                                        <bh:Strong text="Количество выходов"/>
-                                    </b:Column>
-                                    <b:Column size="XS_6">
-                                        <g:HTML ui:field="outputsField"/>
                                     </b:Column>
                                 </b:Row>
                                 <b:Row addStyleNames="{style.panel_row}">
@@ -76,6 +65,30 @@
                             <b:Heading size="H4" text="Результат обучения"/>
 
                             <b:Container fluid="true">
+                                <b:Row addStyleNames="{style.panel_row}">
+                                    <b:Column size="XS_6">
+                                        <bh:Strong text="Количество входов"/>
+                                    </b:Column>
+                                    <b:Column size="XS_6">
+                                        <g:HTML ui:field="inputsField"/>
+                                    </b:Column>
+                                </b:Row>
+                                <b:Row addStyleNames="{style.panel_row}">
+                                    <b:Column size="XS_6">
+                                        <bh:Strong text="Количество выходов"/>
+                                    </b:Column>
+                                    <b:Column size="XS_6">
+                                        <g:HTML ui:field="outputsField"/>
+                                    </b:Column>
+                                </b:Row>
+                                <b:Row addStyleNames="{style.panel_row}">
+                                    <b:Column size="XS_6">
+                                        <bh:Strong text="Количество итераций"/>
+                                    </b:Column>
+                                    <b:Column size="XS_6">
+                                        <g:HTML ui:field="currentIterationField"/>
+                                    </b:Column>
+                                </b:Row>
                                 <b:Row addStyleNames="{style.panel_row}">
                                     <b:Column size="XS_6">
                                         <bh:Strong text="Ошибка обучения"/>
