@@ -47,6 +47,16 @@
     margin-bottom: 0;
 }
 
+.remove {
+    float: left;
+    margin-right: 10px;
+}
+
+.train_method {
+    float: left;
+    width: 350px;
+}
+
 .train {
     float: right;
     margin-left: 10px;

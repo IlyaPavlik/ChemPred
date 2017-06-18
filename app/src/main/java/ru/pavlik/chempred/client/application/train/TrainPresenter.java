@@ -8,6 +8,7 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.DescriptorType;
+import ru.pavlik.chempred.client.model.dao.TrainMethod;
 import ru.pavlik.chempred.client.model.rpc.ErrorHandlerCallback;
 import ru.pavlik.chempred.client.services.compound.CompoundService;
 import ru.pavlik.chempred.client.services.compound.CompoundServiceAsync;
@@ -107,11 +108,11 @@ public class TrainPresenter extends PresenterWidget<TrainPresenter.MyView> imple
     }
 
     @Override
-    public void handlerLELTrain(List<CompoundDao> compounds) {
+    public void handlerLELTrain(final List<CompoundDao> compounds, final TrainMethod trainMethod) {
         getView().changeTrainLELStatus(true);
         Notify.notify("Обучение НКПВ началось");
 
-        predictionService.trainLELValue(compounds, new AsyncCallback<Double>() {
+        predictionService.trainLELValue(compounds, trainMethod, new AsyncCallback<Double>() {
             @Override
             public void onFailure(Throwable caught) {
                 Utils.console(caught);
@@ -128,12 +129,12 @@ public class TrainPresenter extends PresenterWidget<TrainPresenter.MyView> imple
     }
 
     @Override
-    public void handlerUELTrain(List<CompoundDao> compounds) {
+    public void handlerUELTrain(List<CompoundDao> compounds, final TrainMethod trainMethod) {
         getView().changeTrainUELStatus(true);
         Notify.notify("Обучение ВКПВ началось");
 
 
-        predictionService.trainUELValue(compounds, new AsyncCallback<Double>() {
+        predictionService.trainUELValue(compounds, trainMethod, new AsyncCallback<Double>() {
             @Override
             public void onFailure(Throwable caught) {
                 Utils.console(caught);

@@ -6,13 +6,17 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
+import org.neuroph.core.learning.LearningRule;
 import org.neuroph.nnet.MultiLayerPerceptron;
 import org.neuroph.nnet.learning.BackPropagation;
 import org.neuroph.nnet.learning.LMS;
+import org.neuroph.nnet.learning.MomentumBackpropagation;
+import org.neuroph.nnet.learning.ResilientPropagation;
 import org.neuroph.util.TransferFunctionType;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.NeuralNetworkParamDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
+import ru.pavlik.chempred.client.model.dao.TrainMethod;
 import ru.pavlik.chempred.client.services.prediction.PredictionService;
 import ru.pavlik.chempred.server.model.Compound;
 import ru.pavlik.chempred.server.model.Descriptor;
@@ -31,18 +35,18 @@ import java.util.TreeMap;
 @Slf4j
 public class PredictionServiceImp extends RemoteServiceServlet implements PredictionService {
 
-    private static final int LEARN_ITERATION = 10_000;
+    private static final int LEARN_ITERATION = 10_0000;
     private static final double LEARN_MAX_ERROR = 0.0001;
     private static final double LEARN_RATE = 0.1;
 
     @Override
-    public double trainLELValue(final List<CompoundDao> compounds) {
-        return train(compounds, true);
+    public double trainLELValue(final List<CompoundDao> compounds, final TrainMethod trainMethod) {
+        return train(compounds, true, trainMethod);
     }
 
     @Override
-    public double trainUELValue(final List<CompoundDao> compounds) {
-        return train(compounds, false);
+    public double trainUELValue(final List<CompoundDao> compounds, final TrainMethod trainMethod) {
+        return train(compounds, false, trainMethod);
     }
 
     @Override
@@ -158,7 +162,7 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         return normalizeData(inputs);
     }
 
-    private double train(final List<CompoundDao> compounds, final boolean useLEL) {
+    private double train(final List<CompoundDao> compounds, final boolean useLEL, final TrainMethod trainMethod) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
 
@@ -208,23 +212,29 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         outputs = normalizeData(outputs, min, max);
 
         DataSet dataSet = new DataSet(sourceDescriptors.size(), 1);
-        NeuralNetwork neuralNetwork = getNeuralNetwork(sourceDescriptors.size());
+        NeuralNetwork neuralNetwork = getNeuralNetwork(sourceDescriptors.size(), trainMethod);
 
         for (int i = 0; i < inputs.length; i++) {
             dataSet.addRow(inputs[i], new double[]{outputs[i]});
         }
         neuralNetwork.learn(dataSet);
-
-        final LMS learningRule = ((LMS) neuralNetwork.getLearningRule());
-        double totalError = learningRule.getTotalNetworkError();
         NeuralNetworkModel networkModel = new NeuralNetworkModel(useLEL
                 ? NeuralNetworkModel.TypeId.LEL
                 : NeuralNetworkModel.TypeId.UEL);
         networkModel.setNeuralNetwork(neuralNetwork);
         networkModel.setMinOutput(min);
         networkModel.setMaxOutput(max);
-        networkModel.setTotalError(totalError);
-        networkModel.setCurrentIteration(learningRule.getCurrentIteration());
+
+        double totalError = 0;
+        if (neuralNetwork.getLearningRule() instanceof LMS) {
+            final LMS learningRule = ((LMS) neuralNetwork.getLearningRule());
+            totalError = learningRule.getTotalNetworkError();
+            networkModel.setTotalError(totalError);
+            networkModel.setCurrentIteration(learningRule.getCurrentIteration());
+        }
+
+        log.info("Model, {}", networkModel);
+
         session.saveOrUpdate(networkModel);
         session.getTransaction().commit();
 
@@ -291,13 +301,42 @@ public class PredictionServiceImp extends RemoteServiceServlet implements Predic
         return data;
     }
 
-    private NeuralNetwork getNeuralNetwork(int inputSize) {
+//    public static void main(String[] args) {
+//        PredictionServiceImp serviceImp = new PredictionServiceImp();
+//
+//        CompoundConverter converter = new CompoundConverter();
+//
+//        Session session = HibernateUtil.getSessionFactory().openSession();
+//        session.beginTransaction();
+//
+//        Query compoundsQuery = session.createQuery("from Compound");
+//        List<Compound> compounds = compoundsQuery.list();
+//        List<CompoundDao> compoundDaoList = new ArrayList<>();
+//        compounds.forEach(compound -> compoundDaoList.add(converter.convertToDao(compound)));
+//
+//        serviceImp.trainLELValue(compoundDaoList, TrainMethod.MOMENTUM_BACK_PROPAGATION);
+//    }
+
+    private NeuralNetwork getNeuralNetwork(final int inputSize, final TrainMethod trainMethod) {
         NeuralNetwork neuralNetwork = new MultiLayerPerceptron(TransferFunctionType.SIGMOID, inputSize, inputSize / 2, 1);
-        neuralNetwork.setLearningRule(new BackPropagation());
+
+        LearningRule learningRule = new BackPropagation();
+        switch (trainMethod) {
+            case MOMENTUM_BACK_PROPAGATION:
+                learningRule = new MomentumBackpropagation();
+                break;
+            case R_PROP:
+                learningRule = new ResilientPropagation();
+                break;
+        }
+        neuralNetwork.setLearningRule(learningRule);
+
         ((LMS) neuralNetwork.getLearningRule()).setMaxError(LEARN_MAX_ERROR);
         ((LMS) neuralNetwork.getLearningRule()).setLearningRate(LEARN_RATE);
         ((LMS) neuralNetwork.getLearningRule()).setMaxIterations(LEARN_ITERATION);
+
         neuralNetwork.setLabel(TransferFunctionType.SIGMOID.getTypeLabel());
+
         return neuralNetwork;
     }
 

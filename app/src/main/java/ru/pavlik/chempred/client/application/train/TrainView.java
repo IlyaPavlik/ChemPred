@@ -21,6 +21,7 @@ import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import ru.pavlik.chempred.client.application.base.BasePopupView;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.DescriptorType;
+import ru.pavlik.chempred.client.model.dao.TrainMethod;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -42,6 +43,8 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
     Button remove;
     @UiField
     Panel addAll;
+    @UiField
+    ListBox trainMethods;
     @UiField
     Button trainLEL;
     @UiField
@@ -84,6 +87,10 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
             }
         }, ClickEvent.getType());
 
+        for (TrainMethod trainMethod : TrainMethod.values()) {
+            trainMethods.addItem(trainMethod.getName(), trainMethod.name());
+        }
+
         getUiHandlers().loadCompounds();
         getUiHandlers().loadSourceDescriptors();
     }
@@ -93,6 +100,7 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
         super.onDetach();
         tabContent.clear();
         navTabs.clear();
+        trainMethods.clear();
     }
 
     @Override
@@ -275,12 +283,14 @@ public class TrainView extends BasePopupView<TrainUiHandler> implements TrainPre
 
     @UiHandler("trainLEL")
     public void onTrainLELClick(ClickEvent event) {
-        getUiHandlers().handlerLELTrain(selectedCompounds);
+        final TrainMethod trainMethod = TrainMethod.valueOf(trainMethods.getSelectedValue());
+        getUiHandlers().handlerLELTrain(selectedCompounds, trainMethod);
     }
 
     @UiHandler("trainUEL")
     public void onTrainUELClick(ClickEvent event) {
-        getUiHandlers().handlerUELTrain(selectedCompounds);
+        final TrainMethod trainMethod = TrainMethod.valueOf(trainMethods.getSelectedValue());
+        getUiHandlers().handlerUELTrain(selectedCompounds, trainMethod);
     }
 
     private void visiblePlaceholder(boolean visible) {

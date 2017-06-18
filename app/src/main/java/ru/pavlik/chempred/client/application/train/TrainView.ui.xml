@@ -35,7 +35,10 @@
                 </g:cell>
                 <g:cell width="75%">
                     <g:FlowPanel addStyleNames="{style.bottom_panel}">
-                        <b:Button icon="REMOVE" ui:field="remove"/>
+
+                        <b:Button icon="REMOVE" ui:field="remove" addStyleNames="{style.remove}"/>
+
+                        <b:ListBox ui:field="trainMethods" addStyleNames="{style.train_method}"/>
 
                         <b:Button ui:field="trainUEL" text="Обучить ВКПВ" dataLoadingText="Обучение..."
                                   addStyleNames="{style.train}"/>

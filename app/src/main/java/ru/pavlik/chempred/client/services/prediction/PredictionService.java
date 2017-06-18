@@ -6,6 +6,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import ru.pavlik.chempred.client.model.dao.CompoundDao;
 import ru.pavlik.chempred.client.model.dao.NeuralNetworkParamDao;
 import ru.pavlik.chempred.client.model.dao.StructureDao;
+import ru.pavlik.chempred.client.model.dao.TrainMethod;
 
 import java.util.List;
 
@@ -22,9 +23,9 @@ public interface PredictionService extends RemoteService {
 
     List<CompoundDao> predictAllCompounds(boolean useLEL);
 
-    double trainLELValue(List<CompoundDao> compounds);
+    double trainLELValue(List<CompoundDao> compounds, final TrainMethod trainMethod);
 
-    double trainUELValue(List<CompoundDao> compounds);
+    double trainUELValue(List<CompoundDao> compounds, final TrainMethod trainMethod);
 
     NeuralNetworkParamDao loadNeuralNetworkParams(boolean useLEL);
 
